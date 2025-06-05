@@ -6,7 +6,7 @@ import 'screens/home_screen.dart';
 void main() {
   runApp(const MyApp());
 }
-
+// me la pelan paps
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
