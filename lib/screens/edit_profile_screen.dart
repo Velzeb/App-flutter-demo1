@@ -56,14 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  "Información de Cuenta",
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.blueAccent,
-
-                  ),
-                ),
+                _buildSectionTitle("Información de Cuenta"),
                 const SizedBox(height: 20),
                 _buildTextField(
                   controller: _nameController,
@@ -132,8 +125,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Text(
       title,
       style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
+        fontSize: 24,
         color: Colors.blueAccent,
       ),
     );
@@ -262,21 +254,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
 
-
+  // Es la segunda seccion del editar perfil papus
   Widget _buildRentingForm() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Divider(),
         const SizedBox(height: 20),
-        Text(
-          "Editar informacion para Rentar",
-          style: TextStyle(
-            fontSize: 24,
-            color: Colors.blueAccent,
+        // Usar esta madre para los titulos
+        _buildSectionTitle("Editar informacion para Rentar"),
 
-          ),
-        ),
         const SizedBox(height: 20),
         _buildTextField(
           controller: _addressController,
