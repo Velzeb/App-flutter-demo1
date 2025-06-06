@@ -37,7 +37,7 @@ class Rental {
       'createdAt': createdAt.toIso8601String(),
     };
   }
-
+  // Factory de renta
   factory Rental.fromJson(Map<String, dynamic> json) {
     return Rental(
       id: json['id'],
