@@ -89,29 +89,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 const SizedBox(height: 24),
                 const Divider(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 _buildActivationSection(),
                 if (_isRentingActivated) _buildRentingForm(),
                 const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Lógica para guardar los datos del perfil
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Perfil actualizado')),
                       );
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.blueAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    elevation: 6,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+
+                    ),
                   ),
-                  child: const Text(
-                    "Guardar Cambios",
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  child: const Text("Guardar Cambios"),
                 ),
               ],
             ),
@@ -134,6 +139,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  // Widget para los Textos
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
@@ -148,11 +154,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon),
+        prefixIcon: Icon(icon, color: Colors.black87),
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.black45),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.blueAccent, width: 2),
+        ),
+        labelStyle: TextStyle(color: Colors.black87),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -163,6 +178,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+
+
+  // Widget para los testos con password popo:
   Widget _buildPasswordField({
     required TextEditingController controller,
     required String label,
@@ -172,13 +190,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: const Icon(Icons.lock),
+        labelStyle: TextStyle(color: Colors.black87),
+        prefixIcon: const Icon(Icons.lock, color: Colors.black87),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.black45),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.blueAccent, width: 2),
         ),
         suffixIcon: IconButton(
           icon: Icon(
             _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+            color: Colors.black87,
           ),
           onPressed: () {
             setState(() {
@@ -198,13 +226,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+
   Widget _buildActivationSection() {
     return Column(
       children: [
         SwitchListTile(
-          title: const Text(
-            "Activar mi cuenta para rentar autos",
-            style: TextStyle(fontWeight: FontWeight.w600),
+          title: Text(
+            _isRentingActivated
+                ? "Activaste tu cuenta para rentar autos"
+                : "Activar mi cuenta para rentar autos",
+            style: TextStyle(
+              fontSize: 14,
+              color: _isRentingActivated ? Colors.blueAccent : Colors.grey[700],
+
+            ),
           ),
           value: _isRentingActivated,
           onChanged: (bool value) {
@@ -212,30 +247,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               _isRentingActivated = value;
             });
           },
+          activeColor: Colors.blueAccent,            // Thumb activo
+          activeTrackColor: Colors.blue[100],  // Pista activa
+          inactiveThumbColor: Colors.grey[500], // Thumb inactivo
+          inactiveTrackColor: Colors.grey[300], // Pista inactiva
           secondary: Icon(
             _isRentingActivated ? Icons.lock_open : Icons.lock,
-            color: Colors.blueAccent,
+            color: _isRentingActivated ? Colors.blueAccent : Colors.grey,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
       ],
     );
   }
+
+
 
   Widget _buildRentingForm() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Divider(),
-        const SizedBox(height: 16),
-        _buildSectionTitle("Editar informacion para Rentar"),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        Text(
+          "Editar informacion para Rentar",
+          style: TextStyle(
+            fontSize: 24,
+            color: Colors.blueAccent,
+
+          ),
+        ),
+        const SizedBox(height: 20),
         _buildTextField(
           controller: _addressController,
           label: "Dirección",
           icon: Icons.home,
+
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         TextFormField(
           controller: _insuranceController,
           obscureText: !_isInsuranceVisible,
@@ -272,7 +321,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         const SizedBox(height: 24),
         _buildImageUploader(
-          label: "Foto de mi Licencia",
+          label: "Foto de mi licencia",
           onTap: () {
             // Lógica para subir la foto de la licencia
           },
@@ -285,21 +334,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 150,
+        height: 185,
         decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade400),
+          color: Colors.blue[50], // Fondo azul muy suave
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Colors.blue.shade200, width: 1),
         ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.cloud_upload, color: Colors.grey[600], size: 40),
-              const SizedBox(height: 8),
+              Icon(Icons.file_upload_outlined, color: Colors.blue[700], size: 30),
+              const SizedBox(height: 6),
               Text(
                 label,
-                style: TextStyle(color: Colors.grey[800]),
+                style: TextStyle(
+                  color: Colors.blue[800],
+                  fontSize: 17,
+                ),
               ),
             ],
           ),
@@ -307,4 +359,5 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
+
 }
