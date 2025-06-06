@@ -127,7 +127,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   // --- Widgets Reutilizables ---
-
+// reference: use this to create a tittle
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
