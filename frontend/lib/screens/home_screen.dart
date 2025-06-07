@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/screens/edit_profile_screen.dart';
 import '../services/auth_service.dart';
 import '../services/car_service.dart';
 import 'car_list_screen.dart';
@@ -242,10 +243,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       _buildMenuCard(
                         icon: Icons.settings,
                         title: 'Configuración',
-                        subtitle: 'Ajustes de la app',
+                        subtitle: 'Edita tu perfil',
                         color: Colors.purple,
                         onTap: () {
-                          _showComingSoonDialog(context, 'Configuración');
+                          Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context)=> const EditProfileScreen(),
+                            ),
+                          );
                         },
                       ),
                       _buildMenuCard(
