@@ -2,9 +2,27 @@ import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screen_manager.dart';
+import 'models/Requesthandler.dart';
 // Page edit_profile
-void main() {
+void main() async{
   runApp(const MyApp());
+  //healtcheck
+  final handler = RequestHandler();
+  final result = await handler.getRequest('health_check/');
+ //registro
+ /*
+  final user = await handler.postRequest('api/user/create/', data:{
+    "email":"pedro@gmail.com",
+    "password":"securepassword123",
+    "name":"Pedro"}
+  );*/
+
+  //login
+  final login = await handler.postRequest('api/user/login/',data:{
+    "email":"pedro@gmail.com",
+    "password":"securepassword123"
+  } );
+  print(login);
 }
 // me la pelan paps
 class MyApp extends StatelessWidget {
