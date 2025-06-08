@@ -24,7 +24,7 @@ void main() async{
   } );
   print(login);
 }
-// me la pelan paps
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

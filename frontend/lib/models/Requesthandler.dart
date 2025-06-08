@@ -81,17 +81,17 @@ class RequestHandler {
   }
 
   dynamic _handleResponse(http.Response response, Uri uri) {
-    print('Respuesta de $uri -> Código: ${response.statusCode}');
+    //print('Respuesta de $uri -> Código: ${response.statusCode}');
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return jsonDecode(response.body);
     } else {
-      print('Código HTTP ${response.statusCode} - Respuesta: ${response.body}');
+      //print('Código HTTP ${response.statusCode} - Respuesta: ${response.body}');
       throw Exception('Error HTTP ${response.statusCode}: ${response.body}');
     }
   }
 
   void _handleError(dynamic error, String endpoint) {
-    print('[ERROR] en la petición HTTP a "$endpoint": $error');
+    //print('[ERROR] en la petición HTTP a "$endpoint": $error');
     throw Exception('Error en la petición HTTP a "$endpoint": $error');
   }
 }
