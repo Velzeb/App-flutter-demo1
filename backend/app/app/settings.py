@@ -51,7 +51,9 @@ INSTALLED_APPS = [
     'rentals',
 ]
 
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',       
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -195,7 +197,7 @@ CORS_ALLOW_HEADERS = [
 CORS_EXPOSE_HEADERS = ['Set-Cookie']
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000',
-                        'http://localhost:8080',
+                        'http://10.0.2.2:8080',
                         'http://127.0.0.1:8000',
                         'http://localhost:65420',
                         'http://localhost:58315']  # Add your domain
