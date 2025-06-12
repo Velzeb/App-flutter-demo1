@@ -59,7 +59,7 @@ class VerifyRenterAPIView(APIView):
             OpenApiParameter(
                 name='renter_id',
                 location=OpenApiParameter.PATH,
-                description='ID of the Renter to verify.',
+                description='ID of the Renter to versify.',
                 required=True,
                 type=OpenApiTypes.INT
             )
@@ -74,7 +74,7 @@ class VerifyRenterAPIView(APIView):
     )
     def post(self, request, renter_id: int):
         # Get the Renter profile, 404 if not found
-        renter_profile = get_object_or_404(Renter, pk=renter_id)
+        renter_profile = get_object_or_404(Renter, user__id=renter_id)
 
         # Prevent re-verifying if already verified
         if renter_profile.is_verified:
