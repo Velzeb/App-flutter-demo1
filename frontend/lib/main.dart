@@ -19,8 +19,8 @@ void main() async{
 
   //login
   final login = await handler.postRequest('api/user/login/',data:{
-    "email":"andrewing@example.com",
-    "password":"fluterito"
+    "email":"popopopopopo@popo.com",
+  "password":"popo1234"
   } );
   print(login);
 }

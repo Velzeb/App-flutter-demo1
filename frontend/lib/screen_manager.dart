@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/screens/edit_profile_screen.dart';
 import 'screens/home_screen.dart';
 //import 'screens/saved_screen.dart';
 //import 'screens/create_ad_screen.dart';
@@ -20,7 +21,7 @@ class _ScreenManagerState extends State<ScreenManager> {
     HomeScreen(),
     //SavedScreen(),
     //CreateAdScreen(),
-    //UserScreen(),
+    EditProfileScreen(),
   ];
 
   @override
