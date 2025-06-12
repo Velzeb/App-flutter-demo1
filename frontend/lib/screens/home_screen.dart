@@ -15,23 +15,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Generamos 4 dummies
+    // Simulamos N tarjetas (aquí 4), podrían venir de tu backend
     final cards = List.generate(4, (i) {
-      final disponible = (_selectedIndex == 1) ? true : (_selectedIndex == 2 ? false : i % 2 == 0);
+      final disponible = (_selectedIndex == 1)
+          ? true
+          : (_selectedIndex == 2 ? false : i % 2 == 0);
       final rango = disponible
           ? '10/10/2020 - 15/10/2020'
-          : 'Reservado: 10/10/2020 - 15/10/2020\nDisponible desde: 16/10/2020';
-
+          : 'Reservado: 10/10/2020 - 15/10/2020\nDisponible: 16/10/2020';
       return TarjetaAutos(
         usuario: 'usuario${i + 1}',
         imageUrl: 'https://via.placeholder.com/400x200',
         disponible: disponible,
         nombre: 'Auto Dummy ${i + 1}',
         descripcion:
-        'Este es un auto de prueba con descripción larga para validar el LongText widget. Línea $i.',
+        'Descripción de ejemplo para la tarjeta ${i + 1}. Texto largo para probar LongText y asegurar que no explote el layout.',
         rangoFechas: rango,
         onVerMas: () {
-          // TODO: navegar a detalle
+          // TODO: Navegar a detalle
         },
       );
     });
@@ -46,22 +47,33 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          // NavBar con Inicio, Disponibles, Reservados
+          // NavBar superior
           SearchNavBar(
             selectedIndex: _selectedIndex,
             onTap: (idx) => setState(() => _selectedIndex = idx),
           ),
 
-          // Grid de 2 columnas x 2 filas
+          // Contenedor de tarjetas en Wrap para dos columnas dinámicas
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.65,
-                children: cards,
+              padding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  const spacing = 12.0;
+                  // Ancho disponible para cada tarjeta: restamos el espacio entre
+                  final itemWidth = (constraints.maxWidth - spacing) / 2;
+                  return SingleChildScrollView(
+                    child: Wrap(
+                      spacing: spacing,
+                      runSpacing: spacing,
+                      children: cards
+                          .map((card) =>
+                          SizedBox(width: itemWidth, child: card))
+                          .toList(),
+                    ),
+                  );
+                },
               ),
             ),
           ),
