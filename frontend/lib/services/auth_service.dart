@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
-
+import 'package:login_app/services/session_service.dart';
+import '../models/Requesthandler.dart';
+// Modelo Usuario
 class User {
   final String name;
   final String email;
@@ -30,18 +32,8 @@ class User {
 
 class AuthService {
   // Simulamos una base de datos local con algunos usuarios de prueba
-  static final List<User> _users = [
-    User(
-      name: 'Usuario Demo',
-      email: 'demo@example.com',
-      password: '123456',
-    ),
-    User(
-      name: 'Admin',
-      email: 'admin@example.com',
-      password: 'admin123',
-    ),
-  ];
+  static final RequestHandler _requestHandler = RequestHandler();
+  static final List<User> _users = [];
 
   static User? _currentUser;
 
@@ -54,41 +46,75 @@ class AuthService {
     await Future.delayed(const Duration(seconds: 1));
 
     try {
-      final user = _users.firstWhere(
-        (user) => user.email == email && user.password == password,
+
+      final response = await _requestHandler.postRequest(
+        'api/user/login/', // Cambia esto al endpoint correcto de tu backend
+        data: {
+          'email': email,
+          'password': password,
+        },
+
       );
-      _currentUser = user;
-      return true;
+      print(response);
+      // Puedes adaptar esto según la respuesta del backend
+      if (response != null && response['token'] != null) {
+        final String tokenRecibido = response['token'];
+
+        SessionService().setToken(tokenRecibido);
+
+        print('[REGISTER] Token guardado en sesión: $tokenRecibido');
+        print('[LOGIN] Token recibido: ${response['token']}');
+        return true;
+      }
+
+      return false;
     } catch (e) {
+      print('[LOGIN ERROR] $e');
       return false;
     }
   }
 
   // Simular registro
   static Future<bool> register(String name, String email, String password) async {
-    // Simular delay de red
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      const String endpoint = 'api/user/create/';
+      final token = SessionService().token;
 
-    // Verificar si el email ya existe
-    bool emailExists = _users.any((user) => user.email == email);
-    if (emailExists) {
+      final Map<String, dynamic> data = {
+        'name': name,
+        'email': email,
+        'password': password,
+      };
+
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+      };
+
+      final response = await _requestHandler.postRequest(
+        endpoint,
+        data: data,
+        headers: headers,
+      );
+
+      if (kDebugMode) {
+        print('Respuesta del servidor: $response');
+      }
+
+      // Verificamos que el response no sea null y que sea un Map (como se espera en JSON)
+      if (response != null && response is Map<String, dynamic>) {
+        if (response.containsKey('email') || response.containsKey('id')) {
+          // Asumimos que si devuelve un usuario, el registro fue exitoso
+          return true;
+        }
+      }
+
+      return false;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error en register(): $e');
+      }
       return false;
     }
-
-    // Crear nuevo usuario
-    final newUser = User(
-      name: name,
-      email: email,
-      password: password,
-    );
-
-    _users.add(newUser);
-    
-    if (kDebugMode) {
-      print('Usuario registrado: ${newUser.toJson()}');
-    }
-    
-    return true;
   }
 
   // Cerrar sesión
