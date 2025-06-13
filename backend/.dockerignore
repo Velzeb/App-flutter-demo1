@@ -30,3 +30,5 @@ __pycache__/
 # If you have test folders or large assets not needed in production:
 tests/
 docs/
+.git
+tmp/

@@ -1,5 +1,3 @@
-# rentals/urls.py
-
 from django.urls import path
 from .views import (
     VerifyRenterAPIView,
@@ -11,6 +9,8 @@ from .views import (
     CreateParkingAvailabilityAPIView, ListParkingAvailabilityAPIView,
     BookParkingAPIView, ListOwnParkingRentalsAPIView, UpdateCancelParkingRentalAPIView,
     PurchaseInsuranceAPIView, ListOwnInsurancesAPIView, UpdateDeleteInsuranceAPIView,
+    ListAvailableCarsAPIView,   
+    ListAvailableParkingsAPIView 
 )
 
 urlpatterns = [
@@ -22,6 +22,7 @@ urlpatterns = [
     path('register_car/', RegisterCarAPIView.as_view(), name='register-car'),
     path('list_cars/', ListCarsAPIView.as_view(), name='list-cars'),
     path('cars/<int:car_id>/', UpdateDeleteCarAPIView.as_view(), name='update-delete-car'),
+    path('list_available_cars/', ListAvailableCarsAPIView.as_view(), name='list-available-cars'),  # <-- nuevo
 
     # Car Availability
     path('create_car_availability/', CreateCarAvailabilityAPIView.as_view(), name='create-car-availability'),
@@ -36,6 +37,7 @@ urlpatterns = [
     path('register_parking/', RegisterParkingAPIView.as_view(), name='register-parking'),
     path('list_parkings/', ListParkingsAPIView.as_view(), name='list-parkings'),
     path('parkings/<int:parking_id>/', UpdateDeleteParkingAPIView.as_view(), name='update-delete-parking'),
+    path('list_available_parkings/', ListAvailableParkingsAPIView.as_view(), name='list-available-parkings'),  # <-- nuevo
 
     # Parking Availability
     path('create_parking_availability/', CreateParkingAvailabilityAPIView.as_view(), name='create-parking-availability'),
