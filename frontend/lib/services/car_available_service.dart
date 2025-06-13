@@ -11,7 +11,7 @@ class CarAvailableService {
   CarAvailableService({String? baseUrl})
       : _handler = RequestHandler(baseUrlOverride: baseUrl);
 
-  /// Obtiene el token de sesión o lanza si no existe.
+  /// Token de sesión o lanza si no existe.
   String get _authToken {
     final token = SessionService().token;
     if (token == null || token.isEmpty) {
@@ -20,34 +20,13 @@ class CarAvailableService {
     return token;
   }
 
-  /// Obtiene la disponibilidad de un auto a partir de su [carId].
-  Future<List<Availability>> fetchCarAvailability(int carId) async {
-    final headers = {
-      'Authorization': 'Token ${_authToken}',
-      'Content-Type': 'application/json',
-    };
-    final response = await _handler.getRequest(
-      'api/rentals/list_car_availability/',
-      params: {'car_id': carId.toString()},
-      headers: headers,
-    );
-
-    if (response is! List) {
-      throw Exception(
-          'Formato inválido de disponibilidad: esperado List, obtuvo ${response.runtimeType}');
-    }
-
-    return (response as List)
-        .map((e) => Availability.fromJson(e as Map<String, dynamic>))
-        .toList();
-  }
-
-  /// Obtiene los autos disponibles y les inyecta sus fechas de disponibilidad.
+  /// 1) Solo lista los autos disponibles (sin fechas).
   Future<List<CarAvailable>> fetchAvailableCars() async {
     final headers = {
       'Authorization': 'Token ${_authToken}',
       'Content-Type': 'application/json',
     };
+
     final response = await _handler.getRequest(
       'api/rentals/list_available_cars/',
       headers: headers,
@@ -55,36 +34,52 @@ class CarAvailableService {
 
     if (response is! List) {
       throw Exception(
-          'Formato inválido de autos disponibles: esperado List, obtuvo ${response.runtimeType}');
+          'Formato inválido: esperaba lista de autos, obtuvo ${response.runtimeType}');
     }
 
-    final List<CarAvailable> cars = [];
-    for (var item in response as List) {
-      final data = item as Map<String, dynamic>;
-      // 1) Obtiene las fechas para este auto
-      final availability = await fetchCarAvailability(data['id'] as int);
-
-      // 2) Construye la instancia con la disponibilidad
-      cars.add(CarAvailable(
-        id: data['id'] as int,
-        owner: data['owner'] as int,
-        make: data['make'] as String,
-        model: data['model'] as String,
-        year: data['year'] as int,
-        description: data['description'] as String,
-        imageFront: Uri.parse(data['image_front'] as String),
-        imageRear: Uri.parse(data['image_rear'] as String),
-        imageInterior: Uri.parse(data['image_interior'] as String),
+    return (response as List).map((e) {
+      final json = e as Map<String, dynamic>;
+      return CarAvailable(
+        id: json['id'] as int,
+        owner: json['owner'] as int,
+        make: json['make'] as String,
+        model: json['model'] as String,
+        year: json['year'] as int,
+        description: json['description'] as String,
+        imageFront: Uri.parse(json['image_front'] as String),
+        imageRear: Uri.parse(json['image_rear'] as String),
+        imageInterior: Uri.parse(json['image_interior'] as String),
         registrationDocument:
-        Uri.parse(data['registration_document'] as String),
-        dailyRate: data['daily_rate'] as String,
-        isActive: data['is_active'] as bool,
-        createdAt: DateTime.parse(data['created_at'] as String),
-        updatedAt: DateTime.parse(data['updated_at'] as String),
-        availability: availability,
-      ));
+        Uri.parse(json['registration_document'] as String),
+        dailyRate: json['daily_rate'] as String,
+        isActive: json['is_active'] as bool,
+        createdAt: DateTime.parse(json['created_at'] as String),
+        updatedAt: DateTime.parse(json['updated_at'] as String),
+        availability: [], // vacío por ahora
+      );
+    }).toList();
+  }
+
+  /// 2) Cuando el usuario hace tap, llama a este método para obtener las fechas.
+  Future<List<Availability>> fetchCarAvailability(int carId) async {
+    final headers = {
+      'Authorization': 'Token ${_authToken}',
+      'Content-Type': 'application/json',
+    };
+
+    final response = await _handler.getRequest(
+      'api/rentals/list_car_availability/',
+      headers: headers,
+      params: {'car_id': carId.toString()},
+    );
+
+    if (response is! List) {
+      throw Exception(
+          'Formato inválido de disponibilidad: ${response.runtimeType}');
     }
 
-    return cars;
+    return (response as List)
+        .map((e) => Availability.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

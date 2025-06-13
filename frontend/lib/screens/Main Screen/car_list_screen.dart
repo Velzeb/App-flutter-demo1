@@ -29,28 +29,21 @@ class CarListScreen extends StatelessWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             final car = cars[index];
-
-            // Construye un string con las franjas de disponibilidad
-            final availabilityText = car.availability
-                .map((a) {
-              final start = a.start.toLocal().toString().split(' ')[0];
-              final end = a.end.toLocal().toString().split(' ')[0];
-              return '$start - $end';
-            })
-                .join('\n');
-
             return TarjetaItem(
               usuario: 'Owner ${car.owner}',
               imageUrl: car.imageFront.toString(),
               disponible: car.isActive,
               titulo: '${car.year} ${car.make} ${car.model}',
               descripcion: car.description,
-              rangoFechas: availabilityText,
+              rangoFechas: null,       // mostramos solo datos básicos
               precio: 'Bs ${car.dailyRate}',
               ubicacion: null,
               espaciosDisponibles: null,
               onVerMas: () {
-                // TODO: navegar a detalle pasando 'car'
+                // TODO: mostrar modal con disponibilidad
+                // Ejemplo futuro:
+                // final avail = await CarAvailableService().fetchCarAvailability(car.id);
+                // showDialog(... con avail ...)
               },
             );
           },
