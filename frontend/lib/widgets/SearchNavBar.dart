@@ -1,42 +1,49 @@
 import 'package:flutter/material.dart';
 
 class SearchNavBar extends StatelessWidget {
-  final int selectedIndex;
-  final ValueChanged<int> onTap;
+  final int selected;
+  final ValueChanged<int> onSelect;
 
   const SearchNavBar({
     super.key,
-    required this.selectedIndex,
-    required this.onTap,
+    required this.selected,
+    required this.onSelect,
   });
+
+  static const _labels = ['Recientes', 'Autos', 'Parqueos'];
 
   @override
   Widget build(BuildContext context) {
-    final labels = ['Inicio', 'Disponibles', 'Reservados'];
-
     return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      height: 46,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: const BoxDecoration(
+        color: Color(0xFFEFF5F9),
+        boxShadow: [
+          BoxShadow(blurRadius: 3, color: Colors.black12, offset: Offset(0, 1)),
+        ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(labels.length, (i) {
-          final selected = i == selectedIndex;
+        children: List.generate(_labels.length, (i) {
+          final selectedItem = i == selected;
           return GestureDetector(
-            onTap: () => onTap(i),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            onTap: () => onSelect(i),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
               decoration: BoxDecoration(
-                color: selected
+                color: selectedItem
                     ? Theme.of(context).primaryColor
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(24),
               ),
               child: Text(
-                labels[i],
+                _labels[i],
                 style: TextStyle(
-                  color: selected ? Colors.white : Colors.grey[700],
-                  fontWeight:
-                  selected ? FontWeight.bold : FontWeight.normal,
+                  color: selectedItem ? Colors.white : Colors.grey[700],
+                  fontWeight: selectedItem ? FontWeight.bold : FontWeight.w500,
+                  fontSize: 14,
                 ),
               ),
             ),

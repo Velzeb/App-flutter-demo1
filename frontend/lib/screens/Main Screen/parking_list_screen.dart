@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/car.dart';
-import '../services/car_service.dart';
-import 'car_details_screen.dart';
-import 'add_car_screen.dart';
+import '../../models/car.dart';
+import '../../services/car_service.dart';
+import '../car_details_screen.dart';
+import '../add_car_screen.dart';
 
 class CarListScreen extends StatefulWidget {
   const CarListScreen({super.key});
@@ -109,48 +109,48 @@ class _CarListScreenState extends State<CarListScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : _filteredCars.isEmpty
                 ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.directions_car_outlined,
-                          size: 64,
-                          color: Colors.grey[400],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          _searchQuery.isEmpty
-                              ? 'No hay autos disponibles'
-                              : 'No se encontraron autos',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        if (_searchQuery.isEmpty) ...[
-                          const SizedBox(height: 8),
-                          Text(
-                            'Sé el primero en agregar tu auto',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  )
-                : RefreshIndicator(
-                    onRefresh: _loadCars,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: _filteredCars.length,
-                      itemBuilder: (context, index) {
-                        final car = _filteredCars[index];
-                        return _buildCarCard(car);
-                      },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.directions_car_outlined,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    _searchQuery.isEmpty
+                        ? 'No hay autos disponibles'
+                        : 'No se encontraron autos',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
                     ),
                   ),
+                  if (_searchQuery.isEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      'Sé el primero en agregar tu auto',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            )
+                : RefreshIndicator(
+              onRefresh: _loadCars,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: _filteredCars.length,
+                itemBuilder: (context, index) {
+                  final car = _filteredCars[index];
+                  return _buildCarCard(car);
+                },
+              ),
+            ),
           ),
         ],
       ),
@@ -184,24 +184,24 @@ class _CarListScreenState extends State<CarListScreen> {
                 color: Colors.grey[300],
                 child: car.imageUrl.isNotEmpty
                     ? Image.network(
-                        car.imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[200],
-                            child: const Icon(
-                              Icons.directions_car,
-                              size: 64,
-                              color: Colors.grey,
-                            ),
-                          );
-                        },
-                      )
-                    : const Icon(
+                  car.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[200],
+                      child: const Icon(
                         Icons.directions_car,
                         size: 64,
                         color: Colors.grey,
                       ),
+                    );
+                  },
+                )
+                    : const Icon(
+                  Icons.directions_car,
+                  size: 64,
+                  color: Colors.grey,
+                ),
               ),
             ),
 
@@ -300,14 +300,14 @@ class _CarListScreenState extends State<CarListScreen> {
                       ElevatedButton(
                         onPressed: car.isAvailable
                             ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CarDetailsScreen(car: car),
-                                  ),
-                                );
-                              }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CarDetailsScreen(car: car),
+                            ),
+                          );
+                        }
                             : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: car.isAvailable

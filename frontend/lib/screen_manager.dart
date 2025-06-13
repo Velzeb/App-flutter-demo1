@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'screens/Main Screen/MainScreen.dart';
 import 'package:login_app/screens/edit_profile_screen.dart';
-import 'screens/home_screen.dart';
 //import 'screens/saved_screen.dart';
 //import 'screens/create_ad_screen.dart';
 //import 'screens/user_screen.dart';
@@ -18,7 +18,7 @@ class _ScreenManagerState extends State<ScreenManager> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = const [
-    HomeScreen(),
+    MainScreen(),
     //SavedScreen(),
     //CreateAdScreen(),
     EditProfileScreen(),

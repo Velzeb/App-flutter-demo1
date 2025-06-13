@@ -18,11 +18,11 @@ void main() async{
   );*/
 
   //login
-  final login = await handler.postRequest('api/user/login/',data:{
+  /*final login = await handler.postRequest('api/user/login/',data:{
     "email":"popopopopopo@popo.com",
   "password":"popo1234"
   } );
-  print(login);
+  print(login);*/
 }
 
 class MyApp extends StatelessWidget {
