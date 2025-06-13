@@ -7,7 +7,8 @@ from django.contrib.auth import models
 
 from rest_framework import status, permissions
 from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.response import Response    
+from django.utils import timezone
 
 from drf_spectacular.utils import (
     extend_schema,
@@ -241,6 +242,35 @@ class ListCarsAPIView(APIView):
         serializer = CarSerializer(cars, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class ListAvailableCarsAPIView(APIView):
+    """
+    GET: Devuelve todos los vehículos activos que tienen al menos
+         una ventana de disponibilidad futura (no consumida por reservas).
+    """
+    permission_classes = []
+
+    @extend_schema(
+        tags=['Cars'],
+        responses={
+            200: CarSerializer(many=True),
+            403: OpenApiTypes.OBJECT
+        },
+        description=(
+            'Lista todos los Cars con al menos una disponibilidad restante. '
+            'Se consideran únicamente ventanas cuya end_datetime sea posterior a ahora. '
+            'Requiere autenticación.'
+        )
+    )
+    def get(self, request):
+        ahora = timezone.now()
+        # Filtramos Cars activos que tengan al menos una CarAvailability con end > ahora
+        cars_qs = Car.objects.filter(
+            is_active=True,
+            availabilities__end_datetime__gt=ahora
+        ).distinct()
+
+        serializer = CarSerializer(cars_qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UpdateDeleteCarAPIView(APIView):
     """
@@ -375,7 +405,6 @@ class ListCarAvailabilityAPIView(APIView):
 #
 # 4. Car Rental Endpoints
 #
-
 class BookCarAPIView(APIView):
     """
     POST: Request a new CarRent (book a Car).
@@ -529,6 +558,35 @@ class ListParkingsAPIView(APIView):
         serializer = ParkingSerializer(parkings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class ListAvailableParkingsAPIView(APIView):
+    """
+    GET: Devuelve todos los parkings activos que tienen al menos
+         una ventana de disponibilidad futura (no consumida por reservas).
+    """
+    permission_classes = []
+
+    @extend_schema(
+        tags=['Parkings'],
+        responses={
+            200: ParkingSerializer(many=True),
+            403: OpenApiTypes.OBJECT
+        },
+        description=(
+            'Lista todos los Parkings con al menos una disponibilidad restante. '
+            'Se consideran únicamente ventanas cuya end_datetime sea posterior a ahora. '
+            'Requiere autenticación.'
+        )
+    )
+    def get(self, request):
+        ahora = timezone.now()
+        # Filtramos parkings activos que tengan al menos una ParkingAvailability con end > ahora
+        parkings_qs = Parking.objects.filter(
+            is_active=True,
+            availabilities__end_datetime__gt=ahora
+        ).distinct()
+
+        serializer = ParkingSerializer(parkings_qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UpdateDeleteParkingAPIView(APIView):
     """
