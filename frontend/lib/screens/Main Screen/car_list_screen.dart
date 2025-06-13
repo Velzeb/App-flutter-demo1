@@ -1,9 +1,11 @@
 // lib/Screens/car_list_screen.dart
 import 'package:flutter/material.dart';
-import '../../widgets/Home/car_modal.dart';
-import '../../widgets/Tarjeta.dart';
-import '../../services/car_available_service.dart';
+import '../../widgets/Home/car_available_modal.dart';
+import '../../widgets/Home/car_available_modal_view.dart';
 import '../../models/carAvailable.dart';
+import '../../services/car_available_service.dart';
+import '../../services/image_service.dart';
+import '../../widgets/Tarjeta.dart';
 
 class CarListScreen extends StatelessWidget {
   const CarListScreen({Key? key}) : super(key: key);
@@ -30,19 +32,24 @@ class CarListScreen extends StatelessWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             final car = cars[index];
+            // Construimos la URL completa de la imagen frontal
+            final fullImageUrl = ImageService.getFullImageUrl(
+              car.imageFront.toString(),
+            );
+
             return TarjetaItem(
               usuario: 'Owner ${car.owner}',
-              imageUrl: car.imageFront.toString(),
+              imageUrl: fullImageUrl,         // <-- aquí usamos ImageService
               disponible: car.isActive,
               titulo: '${car.year} ${car.make} ${car.model}',
               descripcion: car.description,
-              rangoFechas: null,       // mostramos solo datos básicos
+              rangoFechas: null,
               precio: 'Bs ${car.dailyRate}',
               ubicacion: null,
               espaciosDisponibles: null,
               onVerMas: () {
-                // TODO: mostrar modal con disponibilidad
-                  CarAvailableModal.show(context, car);
+                // TODO: mostrar modal de detalle
+                CarAvailableModal.show(context, car);
               },
             );
           },
