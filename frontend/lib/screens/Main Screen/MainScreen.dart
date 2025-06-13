@@ -61,7 +61,7 @@ class _MainScreenState extends State<MainScreen> {
               children: const [
                 HomeScreen(),      // Recientes
                 CarListScreen(),   // Autos
-                CarListScreen()// Parqueos
+                //CarListScreen()// Parqueos
               ],
             ),
           ),

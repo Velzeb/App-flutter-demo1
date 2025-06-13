@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:login_app/services/session_service.dart';
-import '../models/Requesthandler.dart';
+import 'Requesthandler.dart';
 // Modelo Usuario
 class User {
   final String name;
