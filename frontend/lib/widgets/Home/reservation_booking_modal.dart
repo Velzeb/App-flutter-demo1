@@ -1,6 +1,7 @@
 // lib/widget/reservation_booking_modal.dart
 
 import 'package:flutter/material.dart';
+import 'package:login_app/widgets/Home/reservation_confirmation_model.dart';
 import '../../models/carAvailable.dart';
 import '../../models/reservation_car.dart';
 import '../../services/reservation_service.dart';
@@ -72,6 +73,20 @@ class _ReservationBookingModalState extends State<ReservationBookingModal> {
       setState(() => _error = 'Debes seleccionar ambas fechas');
       return;
     }
+
+    // Mostrar modal de confirmación
+    final confirmed = await ReservationConfirmationModal.show(
+      context,
+      owner: widget.car.owner.toString(),
+      startDate: _startDate!,
+      endDate: _endDate!,
+      total: _total,
+    );
+    if (confirmed != true) {
+      // El usuario canceló la confirmación
+      return;
+    }
+
     setState(() {
       _loading = true;
       _error = null;
@@ -83,7 +98,6 @@ class _ReservationBookingModalState extends State<ReservationBookingModal> {
         end: _endDate!,
       );
       _result = reservation;
-      // Imprime la respuesta en consola
       print('Reserva creada: ${reservation.toJson()}');
       Navigator.of(context).pop(reservation);
     } catch (e) {
@@ -93,6 +107,7 @@ class _ReservationBookingModalState extends State<ReservationBookingModal> {
       });
     }
   }
+
 
   void _onCancel() {
     Navigator.of(context).pop(null);
