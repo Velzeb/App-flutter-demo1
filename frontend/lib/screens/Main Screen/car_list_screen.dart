@@ -1,5 +1,6 @@
 // lib/Screens/car_list_screen.dart
 import 'package:flutter/material.dart';
+import '../../widgets/Home/car_modal.dart';
 import '../../widgets/Tarjeta.dart';
 import '../../services/car_available_service.dart';
 import '../../models/carAvailable.dart';
@@ -41,9 +42,7 @@ class CarListScreen extends StatelessWidget {
               espaciosDisponibles: null,
               onVerMas: () {
                 // TODO: mostrar modal con disponibilidad
-                // Ejemplo futuro:
-                // final avail = await CarAvailableService().fetchCarAvailability(car.id);
-                // showDialog(... con avail ...)
+                  CarAvailableModal.show(context, car);
               },
             );
           },
