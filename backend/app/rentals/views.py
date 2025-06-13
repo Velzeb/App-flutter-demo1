@@ -279,7 +279,7 @@ class UpdateDeleteCarAPIView(APIView):
     """
     permission_classes = [permissions.IsAuthenticated, IsOwnerOfCar]
 
-    @extend_schema(
+    @extend_schema(             
         tags=['Cars'],
         request=CarSerializer,
         responses={
