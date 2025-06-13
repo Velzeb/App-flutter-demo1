@@ -5,7 +5,7 @@ import 'Availability.dart';
 
 class CarAvailable extends Car {
   final int id;
-  final int owner;
+  final String owner;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -44,7 +44,7 @@ class CarAvailable extends Car {
   factory CarAvailable.fromJson(Map<String, dynamic> json) {
     return CarAvailable(
       id: json['id'] as int,
-      owner: json['owner'] as int,
+      owner: json['owner'] as String,
       make: json['make'] as String,
       model: json['model'] as String,
       year: json['year'] as int,

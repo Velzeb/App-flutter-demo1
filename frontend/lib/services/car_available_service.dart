@@ -41,7 +41,7 @@ class CarAvailableService {
       final json = e as Map<String, dynamic>;
       return CarAvailable(
         id: json['id'] as int,
-        owner: json['owner'] as int,
+        owner: json['owner'] as String,
         make: json['make'] as String,
         model: json['model'] as String,
         year: json['year'] as int,

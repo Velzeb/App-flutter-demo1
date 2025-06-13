@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/widgets/Home/reservation_booking_modal.dart';
 import '../../models/Availability.dart';
 import '../../models/carAvailable.dart';
 import '../../services/car_available_service.dart';
 import 'car_available_modal_view.dart';
+import 'car_photos_modal.dart';
 
 /// Lógica del modal: carga disponibilidad y delega la presentación al view.
 class CarAvailableModal extends StatefulWidget {
@@ -56,11 +58,10 @@ class _CarAvailableModalState extends State<CarAvailableModal> {
             onClose: () => Navigator.of(context).pop(),
             onNext: () {
               Navigator.of(context).pop();
-              // TODO: siguiente flujo (e.g. PhotoGalleryModal.show)
+              ReservationBookingModal.show(context, widget.car);
             },
             onViewPhotos: () {
-              Navigator.of(context).pop();
-              // TODO: PhotoGalleryModal.show(context, widget.car);
+              CarPhotosModal.show(context, widget.car);
             },
           );
         }

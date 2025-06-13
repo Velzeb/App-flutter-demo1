@@ -38,7 +38,7 @@ class CarListScreen extends StatelessWidget {
             );
 
             return TarjetaItem(
-              usuario: 'Owner ${car.owner}',
+              usuario: 'Dueño ${car.owner}',
               imageUrl: fullImageUrl,         // <-- aquí usamos ImageService
               disponible: car.isActive,
               titulo: '${car.year} ${car.make} ${car.model}',

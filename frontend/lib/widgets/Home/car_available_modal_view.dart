@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/Availability.dart';
 import '../../models/carAvailable.dart';
 import '../../services/image_service.dart';
+import 'car_photos_modal.dart';
 
 /// Modal que muestra el detalle de un auto disponible para renta.
 /// Solo se han aplicado cambios **visuales** (fondo blanco, botones
