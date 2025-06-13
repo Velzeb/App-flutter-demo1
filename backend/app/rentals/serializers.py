@@ -47,11 +47,14 @@ class RenterSerializer(serializers.ModelSerializer):
 class CarSerializer(serializers.ModelSerializer):
     """
     Serializador para Car.
-    - `owner` se marca como read_only; el ViewSet debe asignar owner desde request.user.renter_profile.
+    - `owner` devuelve el email del Renter (read-only).
     - Las imágenes y el documento de registro retornan URL una vez subidos.
     """
 
-    owner = serializers.PrimaryKeyRelatedField(read_only=True)
+    owner = serializers.CharField(
+        source='owner.user.email',
+        read_only=True
+    )
     image_front = serializers.ImageField(required=True)
     image_rear = serializers.ImageField(required=True)
     image_interior = serializers.ImageField(required=True)
@@ -75,20 +78,18 @@ class CarSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-        read_only_fields = ['created_at', 'updated_at']
+        read_only_fields = ['owner', 'created_at', 'updated_at']
 
     def create(self, validated_data):
         """
-        Override para asignar automáticamente el owner basado en request.user.renter_profile.
-        Se espera que la vista proporcione `context={'request': request}`.
+        Asigna automáticamente el owner basado en request.user.renter_profile.
         """
         request = self.context.get('request')
         if not request or not hasattr(request.user, 'renter_profile'):
             raise serializers.ValidationError(
                 'Solo un Renter autenticado puede crear un Car.'
             )
-        renter_profile = request.user.renter_profile
-        validated_data['owner'] = renter_profile
+        validated_data['owner'] = request.user.renter_profile
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
@@ -97,7 +98,6 @@ class CarSerializer(serializers.ModelSerializer):
         """
         validated_data.pop('owner', None)
         return super().update(instance, validated_data)
-
 
 #
 # 3. CarAvailabilitySerializer
