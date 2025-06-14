@@ -20,22 +20,12 @@ class CustomBottomNavBar extends StatelessWidget {
       backgroundColor: const Color(0xE0C3DCE4),
       onTap: onTap,
       items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Inicio',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.bookmark),
-          label: 'Guardados',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
         BottomNavigationBarItem(
           icon: Icon(Icons.add_circle_outline),
-          label: 'Crear Anuncio',
+          label: 'Registrar Item',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Usuario',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
       ],
     );
   }
