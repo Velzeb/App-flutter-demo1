@@ -1,7 +1,7 @@
 // lib/widget/reservation_booking_modal_view.dart
 
 import 'package:flutter/material.dart';
-import '../../models/carAvailable.dart';
+import '../../models/Main Screen/carAvailable.dart';
 
 class ReservationBookingModalView extends StatelessWidget {
   final CarAvailable car;

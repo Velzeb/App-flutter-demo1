@@ -1,7 +1,7 @@
 // lib/widget/car_available_modal_view.dart
 import 'package:flutter/material.dart';
-import '../../models/Availability.dart';
-import '../../models/carAvailable.dart';
+import '../../models/Main Screen/Availability.dart';
+import '../../models/Main Screen/carAvailable.dart';
 import '../../services/image_service.dart';
 import 'car_photos_modal.dart';
 

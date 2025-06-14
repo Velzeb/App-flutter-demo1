@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/Home/car_available_modal.dart';
 import '../../widgets/Home/car_available_modal_view.dart';
-import '../../models/carAvailable.dart';
+import '../../models/Main Screen/carAvailable.dart';
 import '../../services/car_available_service.dart';
 import '../../services/image_service.dart';
 import '../../widgets/Tarjeta.dart';

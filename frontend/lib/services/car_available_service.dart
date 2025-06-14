@@ -1,7 +1,7 @@
 // lib/services/car_available_service.dart
 
-import '../models/Availability.dart';
-import '../models/carAvailable.dart';
+import '../models/Main Screen/Availability.dart';
+import '../models/Main Screen/carAvailable.dart';
 import '../services/session_service.dart';
 import 'Requesthandler.dart';
 

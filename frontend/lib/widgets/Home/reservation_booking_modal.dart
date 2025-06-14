@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:login_app/widgets/Home/reservation_confirmation_model.dart';
-import '../../models/carAvailable.dart';
-import '../../models/reservation_car.dart';
+import '../../models/Main Screen/carAvailable.dart';
+import '../../models/Main Screen/reservation_car.dart';
 import '../../services/reservation_service.dart';
 import 'reservation_booking_modal_view.dart';
 

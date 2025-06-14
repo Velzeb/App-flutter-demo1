@@ -1,6 +1,6 @@
 // lib/models/car_available.dart
 
-import 'car.dart';
+import '../car.dart';
 import 'Availability.dart';
 
 class CarAvailable extends Car {
