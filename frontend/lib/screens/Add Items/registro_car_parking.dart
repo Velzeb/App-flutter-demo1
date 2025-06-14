@@ -1,11 +1,8 @@
-// lib/screens/register_item_screen.dart
 
 import 'package:flutter/material.dart';
 import '../../widgets/Add Item/car_registration_form.dart';
-
-// lib/screens/register_item_screen.dart
-class RegisterItemScreen extends StatelessWidget {
-  const RegisterItemScreen({super.key});
+class RegisterCarParkingScreen extends StatelessWidget {
+  const RegisterCarParkingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
