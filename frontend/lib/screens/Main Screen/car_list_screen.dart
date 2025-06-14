@@ -1,9 +1,8 @@
 // lib/Screens/car_list_screen.dart
 import 'package:flutter/material.dart';
 import '../../widgets/Home/car_available_modal.dart';
-import '../../widgets/Home/car_available_modal_view.dart';
 import '../../models/Main Screen/carAvailable.dart';
-import '../../services/car_available_service.dart';
+import '../../services/Main Screen/car_available_service.dart';
 import '../../services/image_service.dart';
 import '../../widgets/Tarjeta.dart';
 
@@ -39,7 +38,7 @@ class CarListScreen extends StatelessWidget {
 
             return TarjetaItem(
               usuario: 'Dueño ${car.owner}',
-              imageUrl: fullImageUrl,         // <-- aquí usamos ImageService
+              imageUrl: fullImageUrl,
               disponible: car.isActive,
               titulo: '${car.year} ${car.make} ${car.model}',
               descripcion: car.description,

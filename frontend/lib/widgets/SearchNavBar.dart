@@ -10,7 +10,7 @@ class SearchNavBar extends StatelessWidget {
     required this.onSelect,
   });
 
-  static const _labels = ['Recientes', 'Autos', 'Parqueos'];
+  static const _labels = ['Autos', 'Parqueos'];
 
   @override
   Widget build(BuildContext context) {

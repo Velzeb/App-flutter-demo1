@@ -10,7 +10,6 @@ class HomeScreen extends StatelessWidget {
     final items = List.generate(6, (index) {
       final disponible = index.isEven;
       return TarjetaItem(
-        // width y height se dejan null → usan todo el ancho y altura dinámica
         usuario: 'usuario${index + 1}',
         imageUrl: 'https://via.placeholder.com/400x200',
         disponible: disponible,

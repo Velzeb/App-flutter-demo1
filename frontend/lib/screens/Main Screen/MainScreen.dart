@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/screens/Main%20Screen/parking_list_screen.dart';
 import '../../widgets/SearchNavBar.dart';
-import 'home_screen.dart';
 import 'car_list_screen.dart';
 
 
@@ -18,11 +18,9 @@ class _MainScreenState extends State<MainScreen> {
   String get _subTitle {
     switch (_idx) {
       case 1:
-        return 'Autos Recientes';
-      case 2:
         return 'Parqueos Recientes';
       default:
-        return 'Anuncios Recientes';
+        return 'Autos Recientes';
     }
   }
 
@@ -59,8 +57,8 @@ class _MainScreenState extends State<MainScreen> {
               controller: _pageCtrl,
               onPageChanged: (i) => setState(() => _idx = i),
               children: const [
-                HomeScreen(),      // Recientes
-                CarListScreen(),   // Autos
+                CarListScreen(),
+                ParkingListScreen()// Autos
                 //CarListScreen()// Parqueos
               ],
             ),

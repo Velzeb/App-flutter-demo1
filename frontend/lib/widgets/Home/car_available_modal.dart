@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:login_app/widgets/Home/reservation_booking_modal.dart';
 import '../../models/Main Screen/Availability.dart';
 import '../../models/Main Screen/carAvailable.dart';
-import '../../services/car_available_service.dart';
+import '../../services/Main Screen/car_available_service.dart';
 import 'car_available_modal_view.dart';
 import 'car_photos_modal.dart';
 
