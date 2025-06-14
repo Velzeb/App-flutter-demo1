@@ -59,6 +59,36 @@ class RequestHandler {
         data: data, params: params, headers: headers);
   }
 
+  Future<dynamic> postMultipart(
+      String endpoint, {
+        Map<String, String>? data,
+        Map<String, String>? files,
+        Map<String, String>? params,
+        Map<String, String>? headers,
+      }) async {
+    final uri = Uri.parse('$baseUrl$endpoint').replace(queryParameters: params);
+    print('[Intentando POST multipart en: $uri]');
+
+    final request = http.MultipartRequest('POST', uri);
+
+    // Headers → sin forzar Content‑Type. http se encarga.
+    if (headers != null) request.headers.addAll(headers);
+
+    // Campos de texto.
+    if (data != null) request.fields.addAll(data);
+
+    // Archivos.
+    if (files != null) {
+      for (final entry in files.entries) {
+        request.files.add(await http.MultipartFile.fromPath(entry.key, entry.value));
+      }
+    }
+
+    final streamed = await request.send();
+    final response = await http.Response.fromStream(streamed);
+    return _handleResponse(response, uri);
+  }
+
   Future<dynamic> _sendRequest(String method, String endpoint,
       {Map<String, dynamic>? data,
        Map<String, String>? params,
