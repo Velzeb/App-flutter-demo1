@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/Main Screen/parkingAvailable.dart';
 import '../../services/Main Screen/parking_available_service.dart';
+import '../../widgets/Home/parking_available_modal.dart';
 import '../../widgets/Tarjeta.dart';
 import '../../services/image_service.dart';
 
@@ -28,9 +29,6 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Parkings Disponibles'),
-      ),
       body: FutureBuilder<List<ParkingAvailable>>(
         future: _futureParkings,
         builder: (context, snapshot) {
@@ -59,7 +57,7 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
                     disponible: parking.isActive,
                     titulo: parking.name,
                     descripcion: parking.address,
-                    onVerMas: (){})
+                    onVerMas: (){ParkingAvailableModal.show(context, parking);})
               );
             },
           );

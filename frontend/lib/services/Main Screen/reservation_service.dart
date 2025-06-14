@@ -1,7 +1,7 @@
 // lib/services/reservation_service.dart
 
 
-import '../../models/Main Screen/reservation_car.dart';
+import '../../models/Main Screen/reservation.dart';
 import '../Requesthandler.dart';
 import '../session_service.dart';
 
@@ -38,6 +38,38 @@ class ReservationService {
 
     final response = await _handler.postRequest(
       'api/rentals/book_car/',
+      headers: headers,
+      data: data,
+    );
+
+    if (response is Map<String, dynamic>) {
+      return Reservation.fromJson(response);
+    } else {
+      throw Exception(
+          'Respuesta inesperada al crear reserva: ${response.runtimeType}');
+    }
+  }
+
+
+  /// Crea una reserva en el endpoint POST api/rentals/book_parking/
+  Future<Reservation> bookParking({
+    required int parkingId,
+    required DateTime start,
+    required DateTime end,
+  }) async {
+    final headers = {
+      'Authorization': 'Token $_authToken',
+      'Content-Type': 'application/json',
+    };
+
+    final data = Reservation(
+      parking: parkingId,
+      startDatetime: start,
+      endDatetime: end,
+    ).toJson();
+
+    final response = await _handler.postRequest(
+      'api/rentals/book_parking/',
       headers: headers,
       data: data,
     );

@@ -17,6 +17,7 @@ class Availability {
     );
   }
 
+
   Map<String, dynamic> toJson() => {
     'start': start.toIso8601String(),
     'end': end.toIso8601String(),
