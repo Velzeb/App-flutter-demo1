@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/widgets/Home/parking_booking_modal.dart';
 import '../../models/Main Screen/Availability.dart';
 import '../../models/Main Screen/parkingAvailable.dart';
 import '../../services/Main Screen/parking_available_service.dart';
@@ -16,13 +17,13 @@ class ParkingAvailableModal extends StatefulWidget {
   /// ParkingAvailableModal.show(context, parkingSeleccionado);
   /// ```
   static Future<void> show(BuildContext context, ParkingAvailable parking) {
-    return showModalBottomSheet(
+    return showDialog(
       context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      builder: (_) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        child: ParkingAvailableModal(parking: parking),
       ),
-      builder: (_) => ParkingAvailableModal(parking: parking),
     );
   }
 
@@ -32,13 +33,12 @@ class ParkingAvailableModal extends StatefulWidget {
 
 class _ParkingAvailableModalState extends State<ParkingAvailableModal> {
   late Future<List<Availability>> _futureAvailability;
-  final _service = ParkingAvailableService();
 
   @override
   void initState() {
     super.initState();
     _futureAvailability =
-        _service.fetchParkingAvailability(widget.parking.id);
+        ParkingAvailableService().fetchParkingAvailability(widget.parking.id);
   }
 
   @override
@@ -47,24 +47,29 @@ class _ParkingAvailableModalState extends State<ParkingAvailableModal> {
       future: _futureAvailability,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Padding(
-            padding: EdgeInsets.all(32),
+          return const SizedBox(
+            height: 200,
             child: Center(child: CircularProgressIndicator()),
           );
         }
-        if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(32),
-            child: Center(
-              child: Text('Error: ${snapshot.error}'),
-            ),
+        else if (snapshot.hasError) {
+          return ParkingAvailableModalView.error(
+              errorMessage: snapshot.error.toString(),
+              onClose: () => Navigator.of(context).pop(),
+          );
+        } else{
+          return ParkingAvailableModalView.content(
+              parking: widget.parking,
+              availability: snapshot.data!,
+              onClose: () => Navigator.of(context).pop(),
+              onNext: (){
+                Navigator.of(context).pop();
+                ParkingBookingModal.show(context, widget.parking);
+              }
           );
         }
-        final availability = snapshot.data ?? [];
-        return ParkingAvailableModalView(
-          parking: widget.parking,
-          availability: availability,
-        );
+
+
       },
     );
   }

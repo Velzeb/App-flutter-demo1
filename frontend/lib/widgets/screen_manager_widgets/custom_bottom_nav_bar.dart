@@ -22,6 +22,10 @@ class CustomBottomNavBar extends StatelessWidget {
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
         BottomNavigationBarItem(
+          icon: Icon(Icons.star_outlined),
+          label: 'Mis items',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.add_circle_outline),
           label: 'Registrar Item',
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_app/screens/Add%20Items/registro_car_parking.dart';
+import 'package:login_app/screens/My%20items/my_items_screen.dart';
 import 'screens/Main Screen/MainScreen.dart';
 import 'package:login_app/screens/edit_profile_screen.dart';
 import 'widgets/screen_manager_widgets/custom_app_bar.dart';
@@ -17,6 +18,7 @@ class _ScreenManagerState extends State<ScreenManager> {
 
   final List<Widget> _screens = const [
     MainScreen(),
+    MyItemsScreen(),
     RegisterCarParkingScreen(),
     EditProfileScreen(),
   ];

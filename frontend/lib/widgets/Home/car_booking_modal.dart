@@ -1,11 +1,11 @@
-// lib/widget/reservation_booking_modal.dart
+// lib/widget/car_booking_modal.dart
 
 import 'package:flutter/material.dart';
 import 'package:login_app/widgets/Home/reservation_confirmation_model.dart';
 import '../../models/Main Screen/carAvailable.dart';
 import '../../models/Main Screen/reservation.dart';
 import '../../services/Main Screen/reservation_service.dart';
-import 'reservation_booking_modal_view.dart';
+import 'car_booking_modal_view.dart';
 
 class ReservationBookingModal extends StatefulWidget {
   final CarAvailable car;
