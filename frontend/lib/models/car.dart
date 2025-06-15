@@ -65,32 +65,4 @@ class Car {
     };
   }
 
-  // ===========================
-  // Helpers para manejar imágenes
-  // ===========================
-
-  /// Obtiene la imagen frontal como ImageProvider.
-  ImageProvider get frontImageProvider => NetworkImage(imageFront.toString());
-
-  /// Obtiene la imagen trasera como ImageProvider.
-  ImageProvider get rearImageProvider => NetworkImage(imageRear.toString());
-
-  /// Obtiene la imagen interior como ImageProvider.
-  ImageProvider get interiorImageProvider => NetworkImage(imageInterior.toString());
-
-  /// Widget de la imagen frontal.
-  Widget frontImage({BoxFit fit = BoxFit.cover}) =>
-      Image.network(imageFront.toString(), fit: fit);
-
-  /// Widget de la imagen trasera.
-  Widget rearImage({BoxFit fit = BoxFit.cover}) =>
-      Image.network(imageRear.toString(), fit: fit);
-
-  /// Widget de la imagen interior.
-  Widget interiorImage({BoxFit fit = BoxFit.cover}) =>
-      Image.network(imageInterior.toString(), fit: fit);
-
-  /// Widget para el documento de registro.
-  Widget registrationDocImage({BoxFit fit = BoxFit.cover}) =>
-      Image.network(registrationDocument.toString(), fit: fit);
 }

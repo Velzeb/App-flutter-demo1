@@ -1,14 +1,11 @@
+// lib/services/requesthandler.dart
+
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 
 class RequestHandler {
-  /// Si [baseUrlOverride] está definido, se usa tal cual.
-  /// Si no, se elige según plataforma:
-  /// - Web: localhost:8080
-  /// - Android: 10.0.2.2:8080
-  /// - Resto (iOS, desktop): localhost:8080
   late final String baseUrl;
 
   RequestHandler({String? baseUrlOverride}) {
@@ -32,16 +29,16 @@ class RequestHandler {
 
   Future<dynamic> postRequest(String endpoint,
       {Map<String, dynamic>? data,
-       Map<String, String>? params,
-       Map<String, String>? headers}) {
+        Map<String, String>? params,
+        Map<String, String>? headers}) {
     return _sendRequest('POST', endpoint,
         data: data, params: params, headers: headers);
   }
 
   Future<dynamic> putRequest(String endpoint,
       {Map<String, dynamic>? data,
-       Map<String, String>? params,
-       Map<String, String>? headers}) {
+        Map<String, String>? params,
+        Map<String, String>? headers}) {
     return _sendRequest('PUT', endpoint,
         data: data, params: params, headers: headers);
   }
@@ -53,10 +50,50 @@ class RequestHandler {
 
   Future<dynamic> patchRequest(String endpoint,
       {Map<String, dynamic>? data,
-       Map<String, String>? params,
-       Map<String, String>? headers}) {
+        Map<String, String>? params,
+        Map<String, String>? headers}) {
     return _sendRequest('PATCH', endpoint,
         data: data, params: params, headers: headers);
+  }
+
+  /// Envía un PUT multipart/form-data con campos de texto y archivos.
+  Future<dynamic> putMultipart(
+      String endpoint, {
+        Map<String, String>? data,
+        Map<String, String>? files,
+        Map<String, String>? params,
+        Map<String, String>? headers,
+      }) async {
+    final uri = Uri.parse('$baseUrl$endpoint').replace(queryParameters: params);
+    print('[Intentando PUT multipart en: $uri]');
+
+    final request = http.MultipartRequest('PUT', uri);
+
+    if (headers != null) {
+      request.headers.addAll(headers);
+    }
+
+    // Agregar campos de texto
+    if (data != null) {
+      request.fields.addAll(data);
+    }
+
+    // Agregar archivos
+    if (files != null) {
+      for (final entry in files.entries) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            entry.key,
+            entry.value,
+            filename: entry.value.split('/').last,
+          ),
+        );
+      }
+    }
+
+    final streamed = await request.send();
+    final response = await http.Response.fromStream(streamed);
+    return _handleResponse(response, uri);
   }
 
   Future<dynamic> postMultipart(
@@ -71,16 +108,19 @@ class RequestHandler {
 
     final request = http.MultipartRequest('POST', uri);
 
-    // Headers → sin forzar Content‑Type. http se encarga.
     if (headers != null) request.headers.addAll(headers);
 
-    // Campos de texto.
     if (data != null) request.fields.addAll(data);
 
-    // Archivos.
     if (files != null) {
       for (final entry in files.entries) {
-        request.files.add(await http.MultipartFile.fromPath(entry.key, entry.value));
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            entry.key,
+            entry.value,
+            filename: entry.value.split('/').last,
+          ),
+        );
       }
     }
 
@@ -91,8 +131,8 @@ class RequestHandler {
 
   Future<dynamic> _sendRequest(String method, String endpoint,
       {Map<String, dynamic>? data,
-       Map<String, String>? params,
-       Map<String, String>? headers}) async {
+        Map<String, String>? params,
+        Map<String, String>? headers}) async {
     final uri = Uri.parse('$baseUrl$endpoint')
         .replace(queryParameters: params);
     print('[Intentando $method en: $uri]');
@@ -139,12 +179,14 @@ class RequestHandler {
         return jsonDecode(response.body);
       } else {
         print(
-            '[Advertencia] Respuesta de $uri no es JSON (content-type: $contentType).');
+            '[Advertencia] Respuesta de $uri no es JSON (content-type: $contentType).'
+        );
         return response.body;
       }
     } else {
       throw Exception(
-          'Error HTTP ${response.statusCode}: ${response.body}');
+          'Error HTTP ${response.statusCode}: ${response.body}'
+      );
     }
   }
 
