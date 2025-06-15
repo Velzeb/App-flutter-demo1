@@ -1,7 +1,5 @@
 // lib/models/parking.dart
 
-import 'package:flutter/widgets.dart';
-
 /// Modelo de datos para un estacionamiento, con serialización/deserialización
 class Parking {
   final String name;
@@ -49,14 +47,4 @@ class Parking {
     };
   }
 
-  // ===========================
-  // Helpers para manejar imagen
-  // ===========================
-
-  /// Obtiene la imagen como ImageProvider.
-  ImageProvider get imageProvider => NetworkImage(image.toString());
-
-  /// Widget de la imagen.
-  Widget imageWidget({BoxFit fit = BoxFit.cover}) =>
-      Image.network(image.toString(), fit: fit);
 }

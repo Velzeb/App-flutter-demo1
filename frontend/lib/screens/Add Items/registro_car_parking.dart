@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import '../../widgets/Add Item/car_registration_form.dart';
+import '../../widgets/Add Item/parking_registration_form.dart';
 class RegisterCarParkingScreen extends StatelessWidget {
   const RegisterCarParkingScreen({super.key});
 
@@ -27,14 +28,14 @@ class RegisterCarParkingScreen extends StatelessWidget {
               // ②  ➜   sin const
               child: CarRegistrationForm(),
             ),
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              // ②  ➜   sin const
+              child: ParkingRegistrationForm(),
+            ),
 
             // TAB 1: placeholder
-            const Center(
-              child: Text(
-                'Formulario de parqueo próximamente',
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
+
           ],
         ),
       ),

@@ -67,11 +67,4 @@ class ParkingAvailable extends Parking {
     };
   }
 
-
-  @override
-  ImageProvider get imageProvider => super.imageProvider;
-
-  @override
-  Widget imageWidget({BoxFit fit = BoxFit.cover}) =>
-      super.imageWidget(fit: fit);
 }

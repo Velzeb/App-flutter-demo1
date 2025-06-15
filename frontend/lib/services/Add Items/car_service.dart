@@ -55,21 +55,6 @@ class CarService {
     return Car.fromJson(response as Map<String, dynamic>);
   }
 
-  /* ----------------------------------------------------------------------
-   * Listado de autos del usuario autenticado (READ)
-   * -------------------------------------------------------------------- */
-
-  /// Devuelve la lista de autos registrados por el usuario.
-  Future<List<Car>> listUserCars() async {
-    final response = await _handler.getRequest(
-      'api/rentals/list_cars/',
-      headers: {'Authorization': _authHeader},
-    );
-
-    return (response as List)
-        .map<Car>((e) => Car.fromJson(e as Map<String, dynamic>))
-        .toList();
-  }
 
 /* ----------------------------------------------------------------------
    * TODO: métodos updateCar / deleteCar.
