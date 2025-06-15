@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'my_cars_tab.dart';
+import 'my_parkings_tab.dart';
 //import 'my_parkings_tab.dart';
 
 class MyItemsScreen extends StatelessWidget {
@@ -31,7 +32,7 @@ class MyItemsScreen extends StatelessWidget {
         body: const TabBarView(
           children: [
             MyCarsTab(),
-            //MyParkingsTab(),
+            MyParkingsTab(),
           ],
         ),
       ),
