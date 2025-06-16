@@ -15,6 +15,8 @@ from .models import (
     Insurance
 )
 
+from user.serializers import UserSerializer
+
 #
 # 1. RenterSerializer
 #
@@ -47,17 +49,16 @@ class RenterSerializer(serializers.ModelSerializer):
 class CarSerializer(serializers.ModelSerializer):
     """
     Serializador para Car.
-    - `owner` devuelve el email del Renter (read-only).
+    - `owner` anida completamente el UserSerializer (read-only).
     - Las imágenes y el documento de registro retornan URL una vez subidos.
     """
-
-    owner = serializers.CharField(
-        source='owner.user.email',
+    owner = UserSerializer(
+        source='owner.user',
         read_only=True
     )
-    image_front = serializers.ImageField(required=True)
-    image_rear = serializers.ImageField(required=True)
-    image_interior = serializers.ImageField(required=True)
+    image_front           = serializers.ImageField(required=True)
+    image_rear            = serializers.ImageField(required=True)
+    image_interior        = serializers.ImageField(required=True)
     registration_document = serializers.FileField(required=True)
 
     class Meta:
@@ -275,7 +276,7 @@ class CarRentSerializer(serializers.ModelSerializer):
 class ParkingSerializer(serializers.ModelSerializer):
     """
     Serializador para Parking.
-    - `owner` se asigna automáticamente en create.
+    - `owner` anida completamente el UserSerializer (read-only).
     """
 
     owner = serializers.CharField(
@@ -298,20 +299,26 @@ class ParkingSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-        read_only_fields = ['created_at', 'updated_at']
+        read_only_fields = ['owner', 'created_at', 'updated_at']
 
     def create(self, validated_data):
+        """
+        Asigna automáticamente el owner basado en request.user.renter_profile.
+        """
         request = self.context.get('request')
         if not request or not hasattr(request.user, 'renter_profile'):
-            raise serializers.ValidationError('Solo un Renter autenticado puede crear un Parking.')
-        renter_profile = request.user.renter_profile
-        validated_data['owner'] = renter_profile
+            raise serializers.ValidationError(
+                'Solo un Renter autenticado puede crear un Parking.'
+            )
+        validated_data['owner'] = request.user.renter_profile
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
+        """
+        El propietario no puede cambiarse; se ignora owner en update.
+        """
         validated_data.pop('owner', None)
         return super().update(instance, validated_data)
-
 #
 # 6. ParkingAvailabilitySerializer
 #
