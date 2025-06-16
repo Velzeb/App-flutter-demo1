@@ -295,7 +295,7 @@ class UpdateDeleteCarAPIView(APIView):
         self.check_object_permissions(request, car)
         data = request.data.copy()
         data.pop('owner', None)  # Prevent changing owner
-        serializer = CarSerializer(car, data=data, partial=False, context={'request': request})
+        serializer = CarSerializer(car, data=data, partial=True, context={'request': request})
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -611,7 +611,7 @@ class UpdateDeleteParkingAPIView(APIView):
         self.check_object_permissions(request, parking)
         data = request.data.copy()
         data.pop('owner', None)
-        serializer = ParkingSerializer(parking, data=data, partial=False, context={'request': request})
+        serializer = ParkingSerializer(parking, data=data, partial=True, context={'request': request})
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         try:
