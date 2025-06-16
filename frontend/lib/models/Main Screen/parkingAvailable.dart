@@ -10,7 +10,7 @@ class ParkingAvailable extends Parking {
   final int id;
 
   /// Identificador del propietario
-  final int owner;
+  final String owner;
 
   /// Fecha de creación en el sistema
   final DateTime createdAt;
@@ -42,7 +42,7 @@ class ParkingAvailable extends Parking {
   factory ParkingAvailable.fromJson(Map<String, dynamic> json) {
     return ParkingAvailable(
       id: json['id'] as int,
-      owner: json['owner'] as int,
+      owner: json['owner'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
       name: json['name'] as String,

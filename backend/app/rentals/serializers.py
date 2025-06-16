@@ -278,7 +278,10 @@ class ParkingSerializer(serializers.ModelSerializer):
     - `owner` se asigna automáticamente en create.
     """
 
-    owner = serializers.PrimaryKeyRelatedField(read_only=True)
+    owner = serializers.CharField(
+        source='owner.user.email',
+        read_only=True
+    )
     image = serializers.ImageField(required=True)
 
     class Meta:
