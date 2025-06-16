@@ -1,4 +1,4 @@
-// lib/widgets/rent_car_modal_view.dart
+// lib/widgets/car_rentout_modal_view.dart
 
 import 'package:flutter/material.dart';
 

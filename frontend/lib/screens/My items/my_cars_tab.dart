@@ -10,7 +10,7 @@ import '../../models/Main Screen/carAvailable.dart';
 import '../../services/my items/my_cars_service.dart';
 import '../../widgets/MyItems/car_delete_confirm_dialog.dart';
 import '../../widgets/MyItems/car_edit_modal.dart';
-import '../../widgets/MyItems/rent_car_modal.dart';
+import '../../widgets/MyItems/car_rentout_modal.dart';
 import '../../widgets/Tarjeta.dart';
 
 class MyCarsTab extends StatefulWidget {

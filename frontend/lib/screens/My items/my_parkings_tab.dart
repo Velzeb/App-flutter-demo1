@@ -9,6 +9,8 @@ import 'package:login_app/services/image_service.dart';
 import '../../models/Main Screen/parkingAvailable.dart';
 import '../../services/my items/my_parking_service.dart';
 import '../../widgets/MyItems/parking_delete_confirm_dialog.dart';
+import '../../widgets/MyItems/parking_edit_modal.dart';
+import '../../widgets/MyItems/parking_rentout_modal.dart';
 import '../../widgets/Tarjeta.dart';
 
 
@@ -36,17 +38,17 @@ class _MyParkingsTabState extends State<MyParkingsTab> {
   }
 
   Future<void> _rentParking(ParkingAvailable p) async {
-    /*final avail = await RentParkingModal.show(context, p);
+    final avail = await RentParkingModal.show(context, p);
     if (avail != null) {
       _reload();
-    }*/
+    }
   }
 
   Future<void> _editParking(ParkingAvailable p) async {
-    /*final updated = await ParkingEditModal.show(context, p);
+    final updated = await ParkingEditModal.show(context, p);
     if (updated != null) {
       _reload();
-    }*/
+    }
   }
 
   Future<void> _deleteParking(ParkingAvailable p) async {

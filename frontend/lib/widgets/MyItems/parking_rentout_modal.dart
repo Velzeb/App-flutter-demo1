@@ -1,21 +1,22 @@
-// lib/widgets/rent_car_modal.dart
+// lib/widgets/parking_rentout_modal.dart
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/Main Screen/carAvailable.dart';
+import '../../models/Main Screen/parkingAvailable.dart';
+
 import '../../models/Main Screen/availability.dart';
 import '../../services/image_service.dart';
-import '../../services/my items/rentout_a_car.dart';
-import 'rent_car_modal_view.dart';
+import '../../services/my items/rentout_a_parking.dart';
+import 'parking_rentout_modal_view.dart';
 
-class RentCarModal extends StatefulWidget {
-  final CarAvailable car;
-  const RentCarModal({Key? key, required this.car}) : super(key: key);
+class RentParkingModal extends StatefulWidget {
+  final ParkingAvailable parking;
+  const RentParkingModal({Key? key, required this.parking}) : super(key: key);
 
-  /// Abre el modal y devuelve la [Availability] creada o `null` si se canceló.
+  /// Abre el modal y devuelve la [Availability] creada, o `null` si se canceló.
   static Future<Availability?> show(
-      BuildContext context, CarAvailable car) {
+      BuildContext context, ParkingAvailable parking) {
     return showDialog<Availability?>(
       context: context,
       builder: (_) => Dialog(
@@ -23,22 +24,22 @@ class RentCarModal extends StatefulWidget {
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         insetPadding:
         const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-        child: RentCarModal(car: car),
+        child: RentParkingModal(parking: parking),
       ),
     );
   }
 
   @override
-  State<RentCarModal> createState() => _RentCarModalState();
+  State<RentParkingModal> createState() => _RentParkingModalState();
 }
 
-class _RentCarModalState extends State<RentCarModal> {
+class _RentParkingModalState extends State<RentParkingModal> {
   DateTime? _start;
   DateTime? _end;
   bool _loading = false;
   String? _error;
 
-  final _service = RentOutCarService();
+  final _service = RentOutParkingService();
   final _fmt = DateFormat('dd/MM/yyyy HH:mm');
 
   Future<void> _pickStart() async {
@@ -74,8 +75,8 @@ class _RentCarModalState extends State<RentCarModal> {
     if (picked != null) {
       final time = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(
-            _end ?? base.add(const Duration(hours: 1))),
+        initialTime:
+        TimeOfDay.fromDateTime(_end ?? base.add(const Duration(hours: 1))),
       );
       if (time != null) {
         setState(() {
@@ -96,8 +97,8 @@ class _RentCarModalState extends State<RentCarModal> {
       _error = null;
     });
     try {
-      final avail = await _service.rentOutCar(
-        carId: widget.car.id,
+      final avail = await _service.rentOutParking(
+        ParkingId: widget.parking.id,
         start: _start!,
         end: _end!,
       );
@@ -116,11 +117,11 @@ class _RentCarModalState extends State<RentCarModal> {
   @override
   Widget build(BuildContext context) {
     final imageUrl =
-    ImageService.getFullImageUrl(widget.car.imageFront.toString());
-    return RentCarModalView(
+    ImageService.getFullImageUrl(widget.parking.image.toString());
+    return RentParkingModalView(
       imageUrl: imageUrl,
       message:
-      'Define el rango de disponibilidad para ${widget.car.make} ${widget.car.model}.',
+      'Define el rango de disponibilidad para ${widget.parking.name}.',
       start: _start != null ? _fmt.format(_start!) : null,
       end: _end != null ? _fmt.format(_end!) : null,
       loading: _loading,
