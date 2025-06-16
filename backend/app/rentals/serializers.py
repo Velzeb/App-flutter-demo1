@@ -28,8 +28,11 @@ class RenterSerializer(serializers.ModelSerializer):
     - Los campos driver_license_image y photo_id_image esperan URLs de archivos subidos.
     """
 
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = UserSerializer(
+        read_only=True
+    )
     verified_at = serializers.DateTimeField(read_only=True)
+    is_verified = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Renter

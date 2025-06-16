@@ -45,6 +45,23 @@ from .permissions import (
 )
 
 
+class ListPendingRenterVerificationsAPIView(APIView):
+    """
+    GET: Lista todos los perfiles de Renter cuya verificación está pendiente.
+         - Solo usuarios con is_staff=True pueden acceder.
+    """
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+
+    @extend_schema(
+        tags=['Renter'],
+        responses={200: RenterSerializer(many=True)},
+        description='Endpoint administrado para recuperar todos los perfiles de Renter con is_verified=False.'
+    )
+    def get(self, request):
+        pendientes = Renter.objects.filter(is_verified=False)
+        serializer = RenterSerializer(pendientes, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class VerifyRenterAPIView(APIView):
     """
@@ -295,7 +312,7 @@ class UpdateDeleteCarAPIView(APIView):
         self.check_object_permissions(request, car)
         data = request.data.copy()
         data.pop('owner', None)  # Prevent changing owner
-        serializer = CarSerializer(car, data=data, partial=False, context={'request': request})
+        serializer = CarSerializer(car, data=data, partial=True, context={'request': request})
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -611,7 +628,7 @@ class UpdateDeleteParkingAPIView(APIView):
         self.check_object_permissions(request, parking)
         data = request.data.copy()
         data.pop('owner', None)
-        serializer = ParkingSerializer(parking, data=data, partial=False, context={'request': request})
+        serializer = ParkingSerializer(parking, data=data, partial=True, context={'request': request})
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         try:
