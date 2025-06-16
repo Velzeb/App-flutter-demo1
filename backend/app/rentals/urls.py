@@ -10,13 +10,16 @@ from .views import (
     BookParkingAPIView, ListOwnParkingRentalsAPIView, UpdateCancelParkingRentalAPIView,
     PurchaseInsuranceAPIView, ListOwnInsurancesAPIView, UpdateDeleteInsuranceAPIView,
     ListAvailableCarsAPIView,   
-    ListAvailableParkingsAPIView 
+    ListAvailableParkingsAPIView,
+    ListPendingRenterVerificationsAPIView
 )
 
 urlpatterns = [
     # Renter
     path('profile/', RenterProfileAPIView.as_view(), name='renter-profile'),
+    path('renters/pending-verifications/', ListPendingRenterVerificationsAPIView.as_view(), name='pending-renter-verifications'),
     path('verify_renter/<int:renter_id>/', VerifyRenterAPIView.as_view(), name='verify-renter'),
+
 
     # Cars
     path('register_car/', RegisterCarAPIView.as_view(), name='register-car'),

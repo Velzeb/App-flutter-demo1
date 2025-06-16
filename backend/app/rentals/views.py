@@ -45,6 +45,23 @@ from .permissions import (
 )
 
 
+class ListPendingRenterVerificationsAPIView(APIView):
+    """
+    GET: Lista todos los perfiles de Renter cuya verificación está pendiente.
+         - Solo usuarios con is_staff=True pueden acceder.
+    """
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+
+    @extend_schema(
+        tags=['Renter'],
+        responses={200: RenterSerializer(many=True)},
+        description='Endpoint administrado para recuperar todos los perfiles de Renter con is_verified=False.'
+    )
+    def get(self, request):
+        pendientes = Renter.objects.filter(is_verified=False)
+        serializer = RenterSerializer(pendientes, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class VerifyRenterAPIView(APIView):
     """
