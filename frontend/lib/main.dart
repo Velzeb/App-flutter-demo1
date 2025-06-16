@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screen_manager.dart';
-import 'models/Requesthandler.dart';
+import 'services/Requesthandler.dart';
 // Page edit_profile
 void main() async{
   runApp(const MyApp());
@@ -18,11 +18,11 @@ void main() async{
   );*/
 
   //login
-  final login = await handler.postRequest('api/user/login/',data:{
+  /*final login = await handler.postRequest('api/user/login/',data:{
     "email":"popopopopopo@popo.com",
   "password":"popo1234"
   } );
-  print(login);
+  print(login);*/
 }
 
 class MyApp extends StatelessWidget {

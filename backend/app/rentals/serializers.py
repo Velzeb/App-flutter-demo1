@@ -278,8 +278,9 @@ class ParkingSerializer(serializers.ModelSerializer):
     Serializador para Parking.
     - `owner` anida completamente el UserSerializer (read-only).
     """
-    owner = UserSerializer(
-        source='owner.user',
+
+    owner = serializers.CharField(
+        source='owner.user.email',
         read_only=True
     )
     image = serializers.ImageField(required=True)
