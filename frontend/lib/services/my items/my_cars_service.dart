@@ -100,20 +100,4 @@ class MyCarsService {
     return updated;
   }
 
-  // =================================================
-  // HELPER: Actualizar usando un objeto CarAvailable
-  // =================================================
-  Future<CarAvailable> updateCarFromModel(CarAvailable car) {
-    final payload = <String, String>{
-      'make': car.make,
-      'model': car.model,
-      'year': car.year.toString(),
-      'description': car.description,
-      'daily_rate': car.dailyRate,
-      'is_active': car.isActive.toString(),
-      // No incluye archivos; si quieres modificar imágenes,
-      // usa directamente updateCar y pasa el mapa `files`.
-    };
-    return updateCar(car.id, data: payload, files: <String, String>{});
-  }
 }

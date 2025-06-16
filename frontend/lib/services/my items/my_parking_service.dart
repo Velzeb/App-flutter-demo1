@@ -26,7 +26,7 @@ class MyParkingsService {
       'api/user/me/',
       headers: headers,
     ) as Map<String, dynamic>;
-    final int userId = userJson['pk'] as int;
+    final String email = userJson['email'] as String;
 
     // 3) Obtener lista completa de parqueos
     final rawList = await _http.getRequest(
@@ -36,15 +36,63 @@ class MyParkingsService {
 
     // 4) Filtrar solo los parqueos cuyo owner == userId
     final parkings = rawList
-        .where((e) => e is Map<String, dynamic> && e['owner'] == userId)
+        .where((e) => e is Map<String, dynamic> && e['owner'] == email)
         .map<ParkingAvailable>(
           (e) => ParkingAvailable.fromJson(e as Map<String, dynamic>),
     )
         .toList(growable: false);
 
     if (kDebugMode) {
-      print('[MyParkingsService] ${parkings.length} parqueos para user $userId');
+      print('[MyParkingsService] ${parkings.length} parqueos para user $email');
     }
     return parkings;
   }
+
+
+  // =================================================
+  // ELIMINAR AUTO POR ID
+  // =================================================
+  Future<void> deleteParking(int id) async {
+    final token = await _session.token;
+    final headers = {'Authorization': 'Token $token'};
+
+    await _http.deleteRequest(
+      'api/rentals/parkings/$id/',
+      headers: headers,
+    );
+
+    if (kDebugMode) {
+      print('[MyParkingService] Auto $id eliminado');
+    }
+  }
+  // =================================================
+  // ACTUALIZAR AUTO POR ID (PUT multipart)
+  // Devuelve el CarAvailable actualizado.
+  // -------------------------------------------------
+
+  Future<ParkingAvailable> updateCar(
+      int id, {
+        required Map<String, String> data,
+        required Map<String, String> files,
+      }) async {
+    final token = await _session.token;
+    final headers = {
+      'Authorization': 'Token $token',
+      // multipart lo maneja internamente, no definir Content-Type
+    };
+
+    final json = await _http.putMultipart(
+      'api/rentals/parkings/$id/',
+      data: data,
+      files: files,
+      headers: headers,
+    ) as Map<String, dynamic>;
+
+    final updated = ParkingAvailable.fromJson(json);
+    if (kDebugMode) {
+      print('[MyParkingService] Parking $id actualizado (multipart)');
+    }
+    return updated;
+  }
+
 }

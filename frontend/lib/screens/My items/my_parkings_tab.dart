@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:login_app/services/image_service.dart';
 import '../../models/Main Screen/parkingAvailable.dart';
 import '../../services/my items/my_parking_service.dart';
+import '../../widgets/MyItems/parking_delete_confirm_dialog.dart';
 import '../../widgets/Tarjeta.dart';
 
 
@@ -49,11 +50,11 @@ class _MyParkingsTabState extends State<MyParkingsTab> {
   }
 
   Future<void> _deleteParking(ParkingAvailable p) async {
-   /* final confirmed = await ParkingDeleteConfirmDialog.show(context, p);
+   final confirmed = await ParkingDeleteConfirmDialog.show(context, p);
     if (confirmed == true) {
       await _service.deleteParking(p.id);
       _reload();
-    }*/
+    }
   }
 
   @override
