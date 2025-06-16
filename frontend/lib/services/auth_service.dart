@@ -34,6 +34,9 @@ class AuthService {
   // Simulamos una base de datos local con algunos usuarios de prueba
   static final RequestHandler _requestHandler = RequestHandler();
   static final List<User> _users = [];
+  static bool _isStaff = false;
+  static bool get isStaff => _isStaff;
+
 
   static User? _currentUser;
 
@@ -59,6 +62,7 @@ class AuthService {
       // Puedes adaptar esto según la respuesta del backend
       if (response != null && response['token'] != null) {
         final String tokenRecibido = response['token'];
+        _isStaff = (response['is_staff'] as bool? ?? false);
 
         SessionService().setToken(tokenRecibido);
 

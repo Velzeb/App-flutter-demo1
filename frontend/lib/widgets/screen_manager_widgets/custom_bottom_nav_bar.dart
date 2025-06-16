@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
+  final List<BottomNavigationBarItem> items;
 
   const CustomBottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
+    required this.items,
   });
 
   @override
@@ -19,18 +21,7 @@ class CustomBottomNavBar extends StatelessWidget {
       unselectedItemColor: Colors.black54,
       backgroundColor: const Color(0xE0C3DCE4),
       onTap: onTap,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.star_outlined),
-          label: 'Mis items',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle_outline),
-          label: 'Registrar Item',
-        ),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-      ],
+      items: items,
     );
   }
 }

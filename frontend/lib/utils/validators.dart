@@ -19,7 +19,7 @@ class Validators {
       return 'Por favor ingresa tu contraseña';
     }
 
-    if (value.length < 6) {
+    if (value.length < 3) {
       return 'La contraseña debe tener al menos 6 caracteres';
     }
 
