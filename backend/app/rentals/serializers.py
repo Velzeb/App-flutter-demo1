@@ -52,8 +52,8 @@ class CarSerializer(serializers.ModelSerializer):
     - `owner` anida completamente el UserSerializer (read-only).
     - Las imágenes y el documento de registro retornan URL una vez subidos.
     """
-    owner = UserSerializer(
-        source='owner.user',
+    owner = serializers.CharField(
+        source='owner.user.email',
         read_only=True
     )
     image_front           = serializers.ImageField(required=True)
