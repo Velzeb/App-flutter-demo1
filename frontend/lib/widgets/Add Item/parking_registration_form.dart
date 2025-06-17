@@ -3,10 +3,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../models/parking.dart';
+import '../../models/location_data.dart';
 import '../../services/Add Items/parking_service.dart';
 import '../map/modern_location_picker.dart';
 import '../../theme/app_theme.dart';
@@ -27,9 +27,8 @@ class _ParkingRegistrationFormState extends State<ParkingRegistrationForm> {
   final _rateCtrl = TextEditingController();
   final _service = ParkingService();
   final _picker = ImagePicker();
-
   XFile? _image;
-  LatLng? _position;
+  LocationData? _position;
   bool _submitting = false;
 
   @override
@@ -49,10 +48,10 @@ class _ParkingRegistrationFormState extends State<ParkingRegistrationForm> {
   }
 
   Future<void> _pickLocation() async {
-    final result = await Navigator.of(context).push<LatLng>(
+    final result = await Navigator.of(context).push<LocationData>(
       MaterialPageRoute(
         builder: (context) => ModernLocationPicker(
-          initialLocation: _position,
+          initialLocation: _position?.coordinates,
           title: 'Ubicación del Parqueo',
           subtitle: 'Selecciona la ubicación exacta donde estará tu parqueo',
         ),
@@ -88,8 +87,7 @@ class _ParkingRegistrationFormState extends State<ParkingRegistrationForm> {
       final newParking = await _service.registerParking(
         parking: Parking(
           name: _nameCtrl.text.trim(),
-          address:
-              '${_position!.latitude.toStringAsFixed(6)}, ${_position!.longitude.toStringAsFixed(6)}',
+          address: _position!.address ?? _position!.coordinatesString,
           description: _descCtrl.text.trim(),
           image: Uri.parse(''),
           hourlyRate: _rateCtrl.text.trim(),
@@ -208,7 +206,7 @@ class _ParkingRegistrationFormState extends State<ParkingRegistrationForm> {
                             const SizedBox(height: 4),
                             Text(
                               _position != null
-                                  ? '${_position!.latitude.toStringAsFixed(6)}, ${_position!.longitude.toStringAsFixed(6)}'
+                                  ? _position!.displayText
                                   : 'Toca para seleccionar en el mapa',
                               style: TextStyle(
                                 fontSize: 12,
@@ -216,6 +214,8 @@ class _ParkingRegistrationFormState extends State<ParkingRegistrationForm> {
                                     ? Colors.grey[700]
                                     : Colors.grey[500],
                               ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
