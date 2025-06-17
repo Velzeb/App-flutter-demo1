@@ -1,7 +1,10 @@
-import 'dart:io';
+import 'dart:io' as io; // Para plataformas móviles
+import 'dart:typed_data';
+import 'dart:html' as html; // Solo en web
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../services/renter/renter_service.dart';
+import '../../services/Renter/renter_service.dart';
 
 class RegisterRenterScreen extends StatefulWidget {
   const RegisterRenterScreen({super.key});
@@ -11,25 +14,51 @@ class RegisterRenterScreen extends StatefulWidget {
 }
 
 class _RegisterRenterScreenState extends State<RegisterRenterScreen> {
-  final RenterService _renterService = RenterService();
+  final _renterService = RenterService();
 
-  File? _licenseImage;
-  File? _photoIdImage;
+  XFile? _licenseFile;
+  XFile? _idFile;
+
+  String? _licensePreview;
+  String? _idPreview;
+
   bool _isSubmitting = false;
 
-  final _formKey = GlobalKey<FormState>();
+  Future<void> _pickImage({required bool isLicense}) async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
 
-  Future<void> _pickImage(Function(File) onPicked) async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
-      onPicked(File(picked.path));
+      if (kIsWeb) {
+        final bytes = await picked.readAsBytes();
+        final blob = html.Blob([bytes]);
+        final url = html.Url.createObjectUrlFromBlob(blob);
+
+        setState(() {
+          if (isLicense) {
+            _licenseFile = picked;
+            _licensePreview = url;
+          } else {
+            _idFile = picked;
+            _idPreview = url;
+          }
+        });
+      } else {
+        setState(() {
+          if (isLicense) {
+            _licenseFile = picked;
+          } else {
+            _idFile = picked;
+          }
+        });
+      }
     }
   }
 
   Future<void> _submit() async {
-    if (_licenseImage == null || _photoIdImage == null) {
+    if (_licenseFile == null || _idFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Debes seleccionar ambas imágenes')),
+        const SnackBar(content: Text('Selecciona ambas imágenes')),
       );
       return;
     }
@@ -37,13 +66,13 @@ class _RegisterRenterScreenState extends State<RegisterRenterScreen> {
     setState(() => _isSubmitting = true);
 
     try {
-      await _renterService.registerRenter(
-        driverLicenseImage: _licenseImage!.path,
-        photoIdImage: _photoIdImage!.path,
+      final renter = await _renterService.registerRenter(
+        driverLicenseImage: _licenseFile!.path,
+        photoIdImage: _idFile!.path,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Solicitud enviada correctamente')),
+        const SnackBar(content: Text('Registro como rentador exitoso')),
       );
       Navigator.pop(context);
     } catch (e) {
@@ -55,48 +84,45 @@ class _RegisterRenterScreenState extends State<RegisterRenterScreen> {
     }
   }
 
+  Widget _imagePreview(String? preview, XFile? file) {
+    if (kIsWeb && preview != null) {
+      return Image.network(preview, height: 150);
+    } else if (!kIsWeb && file != null) {
+      return Image.file(io.File(file.path), height: 150);
+    }
+    return const Text('Ninguna imagen seleccionada');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Ser Rentador')),
+      appBar: AppBar(title: const Text('Registro como Rentador')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const Text('Licencia de conducir'),
-              const SizedBox(height: 8),
-              _licenseImage != null
-                  ? Image.file(_licenseImage!, height: 100)
-                  : const Text('No seleccionada'),
-              ElevatedButton(
-                onPressed: () => _pickImage((file) {
-                  setState(() => _licenseImage = file);
-                }),
-                child: const Text('Seleccionar Licencia'),
-              ),
-              const SizedBox(height: 16),
-              const Text('Foto de identificación'),
-              const SizedBox(height: 8),
-              _photoIdImage != null
-                  ? Image.file(_photoIdImage!, height: 100)
-                  : const Text('No seleccionada'),
-              ElevatedButton(
-                onPressed: () => _pickImage((file) {
-                  setState(() => _photoIdImage = file);
-                }),
-                child: const Text('Seleccionar Foto ID'),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ElevatedButton(
+              onPressed: () => _pickImage(isLicense: true),
+              child: const Text('Seleccionar Licencia de Conducir'),
+            ),
+            _imagePreview(_licensePreview, _licenseFile),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _pickImage(isLicense: false),
+              child: const Text('Seleccionar Foto de Identificación'),
+            ),
+            _imagePreview(_idPreview, _idFile),
+            const SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
                 onPressed: _isSubmitting ? null : _submit,
                 child: _isSubmitting
                     ? const CircularProgressIndicator()
                     : const Text('Enviar solicitud'),
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
