@@ -1,91 +1,84 @@
+// lib/services/auth_service.dart
+
 import 'package:flutter/foundation.dart';
-import 'package:login_app/services/session_service.dart';
-import 'Requesthandler.dart';
-// Modelo Usuario
+import '../models/user.dart';
+import 'session_service.dart';
+import 'requesthandler.dart';
 
 class AuthService {
-  // Simulamos una base de datos local con algunos usuarios de prueba
   static final RequestHandler _requestHandler = RequestHandler();
-
+  static final List<User> _users = [];
   static bool _isStaff = false;
   static bool get isStaff => _isStaff;
 
-  // Simular login
+  static User? _currentUser;
+  static User? get currentUser => _currentUser;
+
+  /// Simula login contra el backend.
+  /// Almacena token, establece currentUser e isStaff.
   static Future<bool> login(String email, String password) async {
-    // Simular delay de red
     await Future.delayed(const Duration(seconds: 1));
-
     try {
-
       final response = await _requestHandler.postRequest(
-        'api/user/login/', // Cambia esto al endpoint correcto de tu backend
-        data: {
-          'email': email,
-          'password': password,
-        },
+        'api/user/login/',
+        data: {'email': email, 'password': password},
+      ) as Map<String, dynamic>;
 
-      );
-      print(response);
-      // Puedes adaptar esto según la respuesta del backend
-      if (response != null && response['token'] != null) {
-        final String tokenRecibido = response['token'];
-        _isStaff = (response['is_staff'] as bool? ?? false);
+      final token = response['token'] as String?;
+      if (token == null) return false;
 
-        SessionService().setToken(tokenRecibido);
+      // Guardar token
+      SessionService().setToken(token);
 
-        print('[REGISTER] Token guardado en sesión: $tokenRecibido');
-        print('[LOGIN] Token recibido: ${response['token']}');
-        return true;
+      // Parsear y guardar User
+      _currentUser = User.fromJson(response);
+      _isStaff     = _currentUser?.isStaff ?? false;
+
+      if (kDebugMode) {
+        debugPrint('[AuthService] login ok: ${_currentUser!.email}, staff=$_isStaff');
       }
-
-      return false;
+      return true;
     } catch (e) {
-      print('[LOGIN ERROR] $e');
+      if (kDebugMode) debugPrint('[AuthService] login error: $e');
       return false;
     }
   }
 
-  // Simular registro
+  /// Simula registro de un nuevo usuario.
+  /// No inicia sesión automáticamente.
   static Future<bool> register(String name, String email, String password) async {
     try {
-      const String endpoint = 'api/user/create/';
-      final token = SessionService().token;
-
-      final Map<String, dynamic> data = {
-        'name': name,
-        'email': email,
-        'password': password,
-      };
-
-      final Map<String, String> headers = {
-        'Content-Type': 'application/json',
-      };
-
+      const endpoint = 'api/user/create/';
       final response = await _requestHandler.postRequest(
         endpoint,
-        data: data,
-        headers: headers,
+        data: {'name': name, 'email': email, 'password': password},
+        headers: {'Content-Type': 'application/json'},
       );
+      if (kDebugMode) debugPrint('[AuthService] register resp: $response');
 
-      if (kDebugMode) {
-        print('Respuesta del servidor: $response');
+      if (response is Map<String, dynamic> &&
+          (response.containsKey('email') || response.containsKey('pk'))) {
+        return true;
       }
-
-      // Verificamos que el response no sea null y que sea un Map (como se espera en JSON)
-      if (response != null && response is Map<String, dynamic>) {
-        if (response.containsKey('email') || response.containsKey('id')) {
-          // Asumimos que si devuelve un usuario, el registro fue exitoso
-          return true;
-        }
-      }
-
       return false;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error en register(): $e');
-      }
+      if (kDebugMode) debugPrint('[AuthService] register error: $e');
       return false;
     }
   }
 
+  /// Cierra sesión: borra token y usuario.
+  static void logout() {
+    SessionService().clearToken();
+    _currentUser = null;
+    _isStaff     = false;
+  }
+
+  /// Indica si hay usuario autenticado.
+  static bool isLoggedIn() {
+    return _currentUser != null && SessionService().token != null;
+  }
+
+  /// Para debugging: lista de usuarios creados localmente.
+  static List<User> getUsers() => List.from(_users);
 }
