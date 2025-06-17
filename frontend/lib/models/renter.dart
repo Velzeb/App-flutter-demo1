@@ -5,10 +5,18 @@ import 'user.dart';
 /// Extiende [User] con información específica de rentador.
 class Renter extends User {
   final int id;
-  final Uri driverLicenseImage;
-  final Uri photoIdImage;
+
+  /// URI de la imagen de la licencia de conducir (puede ser null si no existe).
+  final Uri? driverLicenseImage;
+
+  /// URI de la imagen del documento de identidad (puede ser null si no existe).
+  final Uri? photoIdImage;
+
+  /// Indica si ya fue verificado.
   final bool isVerified;
-  final DateTime? verifiedAt;    // <-- ahora nullable
+
+  /// Fecha de verificación (opcional).
+  final DateTime? verifiedAt;
 
   const Renter({
     required this.id,
@@ -19,10 +27,10 @@ class Renter extends User {
     required bool isActive,
     required bool isStaff,
     int? region,
-    required this.driverLicenseImage,
-    required this.photoIdImage,
+    this.driverLicenseImage,
+    this.photoIdImage,
     required this.isVerified,
-    this.verifiedAt,            // <-- opcional
+    this.verifiedAt,
   }) : super(
     pk: pk,
     email: email,
@@ -37,10 +45,19 @@ class Renter extends User {
     final userJson = json['user'] as Map<String, dynamic>;
     final user = User.fromJson(userJson);
 
-    // Aquí comprobamos si viene null o no
+    // Validar licencias y documentos
+    final licStr = json['driver_license_image'] as String?;
+    final idStr = json['photo_id_image']   as String?;
+    final uriLic = (licStr != null && licStr.isNotEmpty)
+        ? Uri.parse(licStr)
+        : null;
+    final uriId  = (idStr  != null && idStr.isNotEmpty)
+        ? Uri.parse(idStr)
+        : null;
+
     final rawVerified = json['verified_at'];
-    final parsedVerifiedAt = rawVerified != null
-        ? DateTime.parse(rawVerified as String)
+    final parsedVerifiedAt = (rawVerified is String && rawVerified.isNotEmpty)
+        ? DateTime.parse(rawVerified)
         : null;
 
     return Renter(
@@ -52,38 +69,34 @@ class Renter extends User {
       isActive: user.isActive,
       isStaff: user.isStaff,
       region: user.region,
-      driverLicenseImage: Uri.parse(json['driver_license_image'] as String),
-      photoIdImage: Uri.parse(json['photo_id_image'] as String),
+      driverLicenseImage: uriLic,
+      photoIdImage:       uriId,
       isVerified: json['is_verified'] as bool? ?? false,
       verifiedAt: parsedVerifiedAt,
     );
   }
 
-  /// Convierte este [Renter] a JSON con la misma forma que viene del backend.
   @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'user': super.toJson(),
-      'driver_license_image': driverLicenseImage.toString(),
-      'photo_id_image': photoIdImage.toString(),
+      'driver_license_image': driverLicenseImage?.toString() ?? '',
+      'photo_id_image': photoIdImage?.toString() ?? '',
       'is_verified': isVerified,
-      'verified_at': verifiedAt?.toIso8601String(),
+      'verified_at': verifiedAt?.toIso8601String() ?? '',
     };
   }
 
-  /// Copia este objeto cambiando únicamente los campos indicados.
   @override
   Renter copyWith({
     int? id,
-    // campos de User:
     String? email,
     String? name,
     String? phoneNumber,
     bool? isActive,
     bool? isStaff,
     int? region,
-    // campos de Renter:
     Uri? driverLicenseImage,
     Uri? photoIdImage,
     bool? isVerified,
@@ -98,9 +111,8 @@ class Renter extends User {
       isActive: isActive ?? this.isActive,
       isStaff: isStaff ?? this.isStaff,
       region: region ?? this.region,
-      driverLicenseImage:
-      driverLicenseImage ?? this.driverLicenseImage,
-      photoIdImage: photoIdImage ?? this.photoIdImage,
+      driverLicenseImage: driverLicenseImage ?? this.driverLicenseImage,
+      photoIdImage:       photoIdImage       ?? this.photoIdImage,
       isVerified: isVerified ?? this.isVerified,
       verifiedAt: verifiedAt ?? this.verifiedAt,
     );

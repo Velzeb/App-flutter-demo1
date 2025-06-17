@@ -5,7 +5,7 @@ import 'package:login_app/screens/Add%20Items/registro_car_parking.dart';
 import 'package:login_app/screens/My%20items/my_items_screen.dart';
 import 'package:login_app/screens/Main%20Screen/MainScreen.dart';
 import 'package:login_app/screens/me/edit_profile_screen.dart';
-import 'package:login_app/screens/Solicitudes/solicitudes_screen.dart';
+import 'package:login_app/screens/Solicitudes/pending_verification_screen.dart';
 import 'package:login_app/services/auth_service.dart';
 import 'widgets/screen_manager_widgets/custom_app_bar.dart';
 import 'widgets/screen_manager_widgets/custom_bottom_nav_bar.dart';
@@ -30,7 +30,7 @@ class _ScreenManagerState extends State<ScreenManager> {
       const MyItemsScreen(),
       const RegisterCarParkingScreen(),
       const EditProfileScreen(),
-      if (isStaff) const SolicitudesScreen(),
+      if (isStaff) const PendingVerificationsScreen(),
     ]; // 2) Ítems de la barra
     final items = <BottomNavigationBarItem>[
       const BottomNavigationBarItem(
