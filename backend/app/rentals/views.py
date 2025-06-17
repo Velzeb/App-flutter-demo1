@@ -9,6 +9,7 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response    
 from django.utils import timezone
+from django.db.models import Q
 
 from drf_spectacular.utils import (
     extend_schema,
@@ -896,6 +897,8 @@ class PurchaseInsuranceAPIView(APIView):
             return Response(e.message_dict, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
 class ListOwnInsurancesAPIView(APIView):
     """
     GET: List all Insurance policies of the authenticated user (for their rentals).
@@ -909,8 +912,8 @@ class ListOwnInsurancesAPIView(APIView):
     )
     def get(self, request):
         insurances = Insurance.objects.filter(
-            models.Q(car_rent__renter=request.user) |
-            models.Q(parking_rent__renter=request.user)
+            Q(car_rent__renter=request.user) |
+            Q(parking_rent__renter=request.user)
         ).order_by('-created_at')
         serializer = InsuranceSerializer(insurances, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -938,7 +941,7 @@ class UpdateDeleteInsuranceAPIView(APIView):
         insurance = get_object_or_404(
             Insurance,
             # Filtro posicional primero
-            models.Q(car_rent__renter=request.user) | models.Q(parking_rent__renter=request.user),
+            Q(car_rent__renter=request.user) | Q(parking_rent__renter=request.user),
             # Después, el filtro por pk
             pk=insurance_id
         )
@@ -973,7 +976,7 @@ class UpdateDeleteInsuranceAPIView(APIView):
         insurance = get_object_or_404(
             Insurance,
             # Filtro posicional primero
-            models.Q(car_rent__renter=request.user) | models.Q(parking_rent__renter=request.user),
+            Q(car_rent__renter=request.user) | Q(parking_rent__renter=request.user),
             # Después, el filtro por pk
             pk=insurance_id
         )
