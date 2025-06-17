@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+class EditProfileScreenBackup extends StatefulWidget {
+  const EditProfileScreenBackup({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  State<EditProfileScreenBackup> createState() => _EditProfileScreenBackupState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileScreenBackupState extends State<EditProfileScreenBackup> {
   // Controladores para los campos de texto
   final _nameController = TextEditingController(text: "mi nombre");
   final _emailController = TextEditingController(text: "@correo.com");
