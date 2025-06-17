@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import '../../services/geocoding_service.dart';
+import '../../models/location_data.dart';
 
 class ModernLocationPicker extends StatefulWidget {
   final LatLng? initialLocation;
@@ -25,7 +27,9 @@ class _ModernLocationPickerState extends State<ModernLocationPicker>
   late Animation<double> _pulseAnimation;
 
   LatLng? _selectedLocation;
+  String? _selectedAddress;
   bool _isLoading = false;
+  bool _isLoadingAddress = false;
 
   @override
   void initState() {
@@ -56,10 +60,36 @@ class _ModernLocationPickerState extends State<ModernLocationPicker>
   void _onMapTap(TapPosition tapPosition, LatLng location) {
     setState(() {
       _selectedLocation = location;
+      _selectedAddress = null; // Reset dirección mientras carga
+      _isLoadingAddress = true;
     });
 
     // Animación de zoom al tocar
     _mapController.move(location, _mapController.camera.zoom);
+
+    // Obtener dirección de la ubicación seleccionada
+    _getAddressFromLocation(location);
+  }
+
+  Future<void> _getAddressFromLocation(LatLng location) async {
+    try {
+      final address = await GeocodingService.getAddressFromCoordinates(
+        location,
+      );
+      if (mounted) {
+        setState(() {
+          _selectedAddress = address;
+          _isLoadingAddress = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _selectedAddress = 'No se pudo obtener la dirección';
+          _isLoadingAddress = false;
+        });
+      }
+    }
   }
 
   void _centerOnLocation() {
@@ -331,18 +361,81 @@ class _ModernLocationPickerState extends State<ModernLocationPicker>
                         ],
                       ),
                       const SizedBox(height: 8),
+                      // Dirección
+                      if (_isLoadingAddress) ...[
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFF1565C0),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Obteniendo dirección...',
+                              style: TextStyle(
+                                color: Color(0xFF757575),
+                                fontSize: 14,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                      ] else if (_selectedAddress != null) ...[
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF1565C0).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Color(0xFF1565C0).withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.place,
+                                color: Color(0xFF1565C0),
+                                size: 16,
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  _selectedAddress!,
+                                  style: TextStyle(
+                                    color: Color(0xFF212121),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                      // Coordenadas
                       Text(
                         'Lat: ${_selectedLocation!.latitude.toStringAsFixed(6)}',
                         style: const TextStyle(
                           color: Color(0xFF757575),
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                       Text(
                         'Lng: ${_selectedLocation!.longitude.toStringAsFixed(6)}',
                         style: const TextStyle(
                           color: Color(0xFF757575),
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -395,7 +488,13 @@ class _ModernLocationPickerState extends State<ModernLocationPicker>
                 flex: 2,
                 child: ElevatedButton(
                   onPressed: _selectedLocation != null
-                      ? () => Navigator.pop(context, _selectedLocation)
+                      ? () {
+                          final locationData = LocationData(
+                            coordinates: _selectedLocation!,
+                            address: _selectedAddress,
+                          );
+                          Navigator.pop(context, locationData);
+                        }
                       : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1565C0),
