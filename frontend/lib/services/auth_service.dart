@@ -27,8 +27,8 @@ class AuthService {
       final token = response['token'] as String?;
       if (token == null) return false;
 
-      // Guardar token
-      SessionService().setToken(token);
+      // Esperar a que se persista el token
+      await SessionService().setToken(token);
 
       // Parsear y guardar User
       _currentUser = User.fromJson(response);
@@ -80,14 +80,15 @@ class AuthService {
         if (kDebugMode) debugPrint('Logout API error: $e');
       }
     }
-    SessionService().clearToken();
+    // Esperar a que se elimine el token persistido
+    await SessionService().clearToken();
     _currentUser = null;
     _isStaff     = false;
   }
 
   /// Indica si hay usuario autenticado.
   static bool isLoggedIn() {
-    return _currentUser != null && SessionService().token != null;
+    return SessionService().token != null;
   }
 
   /// Para debugging: lista de usuarios creados localmente.

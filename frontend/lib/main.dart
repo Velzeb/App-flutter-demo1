@@ -4,6 +4,7 @@ import 'screens/register_screen.dart';
 import 'screen_manager.dart';
 import 'services/Requesthandler.dart';
 import 'theme/app_theme.dart';
+import 'services/session_service.dart';
 
 // Page edit_profile
 void main() async {
@@ -11,6 +12,8 @@ void main() async {
   //healtcheck
   final handler = RequestHandler();
   await handler.getRequest('health_check/');
+
+  await SessionService().init();
   //registro
   /*
   final user = await handler.postRequest('api/user/create/', data:{
