@@ -77,7 +77,7 @@ class RenterService {
     };
 
     await _http.postRequest(
-      'api/rentals/verify_renter/\$renterId/',
+      'api/rentals/verify_renter/$renterId/',
       headers: headers,
     );
 

@@ -29,14 +29,14 @@ class _PendingVerificationsScreenState
 
   void _approve(Renter renter) async {
     try {
-      await _service.verifyRenter(renter.id);
+      await _service.verifyRenter(renter.pk);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Rentador aprobado')),
       );
       setState(() => _pendings.remove(renter));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al aprobar: \$e')),
+        SnackBar(content: Text('Error al aprobar: $e')),
       );
     }
   }
@@ -81,7 +81,7 @@ class _PendingVerificationsScreenState
           return const Center(child: CircularProgressIndicator());
         }
         if (snap.hasError) {
-          return Center(child: Text('Error: \${snap.error}'));
+          return Center(child: Text('Error: ${snap.error}'));
         }
         _pendings = snap.data ?? [];
         if (_pendings.isEmpty) {
@@ -102,34 +102,48 @@ class _PendingVerificationsScreenState
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Foto de documento de identidad o placeholder
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: photoUrl != null
-                          ? Image.network(photoUrl,
-                          width: 100, height: 100, fit: BoxFit.cover)
+                          ? Image.network(
+                        photoUrl,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      )
                           : Container(
                         width: 100,
                         height: 100,
                         color: Colors.grey[300],
-                        child: const Icon(Icons.person_outline,
-                            size: 40, color: Colors.grey),
+                        child: const Icon(
+                          Icons.person_outline,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    // Detalles y botones
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(renter.name,
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text(
+                            renter.name,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
-                          Text(renter.email,
-                              style: const TextStyle(color: Colors.grey)),
+                          Text(
+                            renter.email,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
                           const SizedBox(height: 12),
+                          // Primera fila de botones
                           Row(
                             children: [
                               TextButton(
@@ -141,12 +155,16 @@ class _PendingVerificationsScreenState
                                 onPressed: () => _approve(renter),
                                 child: const Text('Aprobar'),
                               ),
-                              const SizedBox(width: 8),
-                              OutlinedButton(
-                                onPressed: () => _hide(renter),
-                                child: const Text('Ocultar'),
-                              ),
                             ],
+                          ),
+                          const SizedBox(height: 8),
+                          // Botón ocultar en nueva línea
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: OutlinedButton(
+                              onPressed: () => _hide(renter),
+                              child: const Text('Ocultar'),
+                            ),
                           ),
                         ],
                       ),
