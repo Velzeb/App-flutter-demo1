@@ -1,12 +1,16 @@
 // lib/screens/edit_profile_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:login_app/screens/me/renter_profile_form.dart';
 
+import '../../models/renter.dart';
 import '../../models/user.dart';
 import '../../services/me/userService.dart';
+import '../../services/auth_service.dart';
 import '../../widgets/profile/edit_toggle.dart';
 import '../../widgets/profile/profile_password_field.dart';
 import '../../widgets/profile/profile_text_field.dart';
+import '../login_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -68,12 +72,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _passwordCtrl.clear();
       _confirmCtrl.clear();
       setState(() => _editing = false);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Perfil actualizado')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Perfil actualizado')),
+      );
     } catch (e) {
       setState(() => _error = e.toString());
     } finally {
       setState(() => _saving = false);
     }
+  }
+
+  Future<void> _logout() async {
+    await AuthService.logout();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+          (route) => false,
+    );
   }
 
   @override
@@ -98,6 +112,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               CircleAvatar(
                 radius: 40,
@@ -169,6 +184,46 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                 )
                     : const Text('Guardar Cambios'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: () => debugPrint('Registrar Seguro'),
+                icon: const Icon(Icons.security),
+                label: const Text('Registrar Seguro'),
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  final renter = await showDialog<Renter?>(
+                    context: context,
+                    builder: (_) => Dialog(
+                      insetPadding: const EdgeInsets.all(24),
+                      child: RenterProfileForm(onRegistered: (r) {
+                        Navigator.of(context).pop(r);
+                      }),
+                    ),
+                  );
+                  if (renter != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('¡Ya verificado!'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.store),
+                label: const Text('Ser Rentador'),
+              ),
+
+              const SizedBox(height: 8),
+              ElevatedButton.icon(
+                onPressed: _logout,
+                icon: const Icon(Icons.logout),
+                label: const Text('Cerrar sesión'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                ),
               ),
             ],
           ),

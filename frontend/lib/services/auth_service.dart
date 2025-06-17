@@ -68,7 +68,18 @@ class AuthService {
   }
 
   /// Cierra sesión: borra token y usuario.
-  static void logout() {
+  static Future<void> logout() async {
+    final token = SessionService().token;
+    if (token != null) {
+      try {
+        await _requestHandler.postRequest(
+          'api/user/logout/',
+          headers: {'Authorization': 'Token $token'},
+        );
+      } catch (e) {
+        if (kDebugMode) debugPrint('Logout API error: $e');
+      }
+    }
     SessionService().clearToken();
     _currentUser = null;
     _isStaff     = false;
