@@ -1,8 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
-import 'Requesthandler.dart';
-import 'session_service.dart';
+import '../Requesthandler.dart';
+import '../session_service.dart';
 
 class ItemRegistrationService {
   final RequestHandler _requestHandler = RequestHandler();

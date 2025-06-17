@@ -2,46 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:login_app/services/session_service.dart';
 import 'Requesthandler.dart';
 // Modelo Usuario
-class User {
-  final String name;
-  final String email;
-  final String password;
-
-  User({
-    required this.name,
-    required this.email,
-    required this.password,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'email': email,
-      'password': password,
-    };
-  }
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      name: json['name'],
-      email: json['email'],
-      password: json['password'],
-    );
-  }
-}
 
 class AuthService {
   // Simulamos una base de datos local con algunos usuarios de prueba
   static final RequestHandler _requestHandler = RequestHandler();
-  static final List<User> _users = [];
+
   static bool _isStaff = false;
   static bool get isStaff => _isStaff;
-
-
-  static User? _currentUser;
-
-  // Obtener usuario actual
-  static User? get currentUser => _currentUser;
 
   // Simular login
   static Future<bool> login(String email, String password) async {
@@ -121,27 +88,4 @@ class AuthService {
     }
   }
 
-  // Cerrar sesión
-  static void logout() {
-    _currentUser = null;
-  }
-
-  // Verificar si hay usuario logueado
-  static bool isLoggedIn() {
-    return _currentUser != null;
-  }
-
-  // Obtener lista de usuarios (solo para debug)
-  static List<User> getUsers() {
-    return List.from(_users);
-  }
-
-  // Get current user as Map (for compatibility with new screens)
-  static Map<String, String>? getCurrentUser() {
-    if (_currentUser == null) return null;
-    return {
-      'name': _currentUser!.name,
-      'email': _currentUser!.email,
-    };
-  }
 }

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:login_app/screens/Add%20Items/registro_car_parking.dart';
 import 'package:login_app/screens/My%20items/my_items_screen.dart';
 import 'package:login_app/screens/Main%20Screen/MainScreen.dart';
-import 'package:login_app/screens/edit_profile_screen.dart';
-import 'package:login_app/screens/Solicitudes/solicitudes_screen.dart'; // importa tu pantalla
+import 'package:login_app/screens/me/edit_profile_screen.dart';
+import 'package:login_app/screens/Solicitudes/solicitudes_screen.dart';
 import 'package:login_app/services/auth_service.dart';
 import 'widgets/screen_manager_widgets/custom_app_bar.dart';
 import 'widgets/screen_manager_widgets/custom_bottom_nav_bar.dart';
