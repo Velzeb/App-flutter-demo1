@@ -3,14 +3,16 @@ import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screen_manager.dart';
 import 'services/Requesthandler.dart';
+import 'theme/app_theme.dart';
+
 // Page edit_profile
-void main() async{
+void main() async {
   runApp(const MyApp());
   //healtcheck
   final handler = RequestHandler();
-  final result = await handler.getRequest('health_check/');
- //registro
- /*
+  await handler.getRequest('health_check/');
+  //registro
+  /*
   final user = await handler.postRequest('api/user/create/', data:{
     "email":"pedro@gmail.com",
     "password":"securepassword123",
@@ -27,15 +29,11 @@ void main() async{
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      title: 'RentCar Pro',
+      theme: AppTheme.lightTheme,
       home: const LoginScreen(),
       routes: {
         '/login': (context) => const LoginScreen(),

@@ -11,39 +11,78 @@ class SearchNavBar extends StatelessWidget {
   });
 
   static const _labels = ['Autos', 'Parqueos'];
+  static const _icons = [Icons.directions_car, Icons.local_parking];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 46,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: const BoxDecoration(
-        color: Color(0xFFEFF5F9),
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(blurRadius: 3, color: Colors.black12, offset: Offset(0, 1)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            offset: const Offset(0, 2),
+            blurRadius: 12,
+            spreadRadius: 0,
+          ),
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(_labels.length, (i) {
-          final selectedItem = i == selected;
-          return GestureDetector(
-            onTap: () => onSelect(i),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-              decoration: BoxDecoration(
-                color: selectedItem
-                    ? Theme.of(context).primaryColor
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Text(
-                _labels[i],
-                style: TextStyle(
-                  color: selectedItem ? Colors.white : Colors.grey[700],
-                  fontWeight: selectedItem ? FontWeight.bold : FontWeight.w500,
-                  fontSize: 14,
+          final isSelected = i == selected;
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => onSelect(i),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFF1565C0)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: const Color(0xFF1565C0).withOpacity(0.3),
+                            offset: const Offset(0, 2),
+                            blurRadius: 8,
+                            spreadRadius: 0,
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _icons[i],
+                      size: 20,
+                      color: isSelected
+                          ? Colors.white
+                          : const Color(0xFF757575),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      _labels[i],
+                      style: TextStyle(
+                        color: isSelected
+                            ? Colors.white
+                            : const Color(0xFF757575),
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

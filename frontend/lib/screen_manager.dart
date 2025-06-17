@@ -31,32 +31,42 @@ class _ScreenManagerState extends State<ScreenManager> {
       const RegisterCarParkingScreen(),
       const EditProfileScreen(),
       if (isStaff) const SolicitudesScreen(),
-    ];
-
-    // 2) Ítems de la barra
+    ]; // 2) Ítems de la barra
     final items = <BottomNavigationBarItem>[
-      const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
       const BottomNavigationBarItem(
-        icon: Icon(Icons.star_outlined),
-        label: 'Mis items',
+        icon: Icon(Icons.home_outlined),
+        activeIcon: Icon(Icons.home),
+        label: 'Inicio',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.favorite_outline),
+        activeIcon: Icon(Icons.favorite),
+        label: 'Mis Items',
       ),
       const BottomNavigationBarItem(
         icon: Icon(Icons.add_circle_outline),
-        label: 'Registrar Item',
+        activeIcon: Icon(Icons.add_circle),
+        label: 'Agregar',
       ),
-      const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.person_outline),
+        activeIcon: Icon(Icons.person),
+        label: 'Perfil',
+      ),
       if (isStaff)
         const BottomNavigationBarItem(
-            icon: Icon(Icons.lock_open_sharp), label: 'Solicitudes'),
+          icon: Icon(Icons.assignment_outlined),
+          activeIcon: Icon(Icons.assignment),
+          label: 'Admin',
+        ),
     ];
 
     // Ajustar _currentIndex si cambió la longitud
     if (_currentIndex >= screens.length) {
       _currentIndex = 0;
     }
-
     return Scaffold(
-      backgroundColor: const Color(0xE0F0F6FA),
+      backgroundColor: const Color(0xFFF8FAFB),
       appBar: const CustomAppBar(),
       body: screens[_currentIndex],
       bottomNavigationBar: CustomBottomNavBar(
